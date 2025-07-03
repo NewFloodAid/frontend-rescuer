@@ -1,0 +1,129 @@
+"use client";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import NavBar from "@/components/Navbar";
+import PriorityList from "@/components/search/PriorityList";
+import { useQueryGetReports } from "@/api/report";
+import MainMap from "@/components/map/MainMap";
+import SearchPart from "@/components/search/Search";
+import ReportCard from "@/components/reports/ReportCard";
+import FilterPart from "@/components/search/Filter";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import { GetReportsQueryParams} from "@/types/report";
+import { REPORT_ITEM_PER_PAGE } from "@/constants/pagination";
+import { isAuthenticated } from "@/api/login";
+import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
+
+export default function Main() {
+  const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({
+    priorities: [0, 1, 2, 3],
+  });
+  const queryReports = useQueryGetReports(queryParams);
+  const [searchInput, setSearchInput] = useState("");
+  const [page, setPage] = useState(1);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.replace("/");
+    }
+  }, [router]);
+
+  const reports = useMemo(() => queryReports.data || [], [queryReports.data]);
+
+  const filteredReports = useMemo(() => {
+    const [firstName = "", lastName = ""] = searchInput.toLowerCase().split(" ");
+    return reports.filter(
+      (report) =>
+        report.firstName.toLowerCase().includes(firstName) &&
+        report.lastName.toLowerCase().includes(lastName)
+    );
+  }, [searchInput, reports]);
+
+  useEffect(() => {
+    const totalPages = Math.ceil(filteredReports.length / REPORT_ITEM_PER_PAGE);
+    if (page > totalPages) {
+      setPage(1);
+    }
+  }, [filteredReports, page]);
+
+  useEffect(() => {
+    queryReports.refetch();
+  }, [queryParams]); 
+
+  const handleChangePage = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
+  const onChangeReportsQueryParam = useCallback(
+    (field: string, value: string | number | number[] | null) => {
+      setQueryParams((prevParams) => ({ ...prevParams, [field]: value }));
+    },
+    []
+  );
+
+  const paginatedReports = useMemo(
+    () => filteredReports.slice((page - 1) * REPORT_ITEM_PER_PAGE, page * REPORT_ITEM_PER_PAGE),
+    [filteredReports, page]
+  );
+
+  if(queryReports.isPending) {
+    return <Loader />;
+  }
+  
+  return (
+    <>
+      <NavBar />
+      <div className="mt-[0.75%] px-[3%]">
+        <div className="flex flex-row mb-[1%] items-center font-kanit gap-[2%]">
+          <FilterPart onChangeReportsQueryParam={onChangeReportsQueryParam} />
+        </div>
+        <div className="flex items-center">
+          <div className="flex-none">
+            <MainMap reports={filteredReports} />
+          </div>
+          <div className="flex flex-grow justify-center">
+            <PriorityList reports={filteredReports} />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-[1%] px-[3%]">
+        <SearchPart
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          onChangeReportsQueryParam={onChangeReportsQueryParam}
+        />
+        <div className="flex flex-wrap gap-[1.5%] items-start mt-4">
+          {paginatedReports.map((report) => (
+            <ReportCard report={report} key={report.id} />
+          ))}
+        </div>
+        {paginatedReports.length > 0 && (
+          <Stack spacing={2} alignItems="center" sx={{ marginY: "2%" }}>
+            <Pagination
+              count={Math.ceil(filteredReports.length / REPORT_ITEM_PER_PAGE)}
+              page={page}
+              onChange={handleChangePage}
+              size="large"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "#000000",
+                  fontFamily: "kanit",
+                },
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#ff3388",
+                  color: "#FFFFFF",
+                },
+                "& .MuiPaginationItem-root.Mui-selected:hover": {
+                  backgroundColor: "#ff0066",
+                },
+              }}
+            />
+          </Stack>
+        )}
+      </div>
+    </>
+  );
+}

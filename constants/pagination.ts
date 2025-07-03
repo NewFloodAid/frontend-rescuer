@@ -1,0 +1,2 @@
+const REPORT_ITEM_PER_PAGE = 8;
+export { REPORT_ITEM_PER_PAGE };
