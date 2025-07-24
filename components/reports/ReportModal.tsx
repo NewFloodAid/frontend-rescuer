@@ -9,7 +9,7 @@ import UpdateReportButton from "../buttons/UpdateReportButton";
 import DeleteModal from "./DeleteModal";
 import ReportDetail from "./ReportDetail";
 import { DateDisplay, TimeDisplay } from "../DateTimeDisplay";
-import RejectReportModal from "./RejectModal";
+import { shareReportToLine } from "@/libs/liff";
 
 interface ReportModalProps {
   initialReport: Report;
@@ -23,11 +23,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
   onReportDetailModalClose,
 }) => {
 
-  const isReportStatusRejectedOrSuccess = (report:Report) => {
-    return (
-      report.reportStatus.status === ReportStatusEnum.enum.REJECTED ||
-      report.reportStatus.status === ReportStatusEnum.enum.SUCCESS
-    );
+  const isReportStatusSuccess = (report:Report) => {
+    return report.reportStatus.status === ReportStatusEnum.enum.SUCCESS;
   };
 
   const isReportStatusPendingOrProcessing = (report:Report) => {
@@ -39,19 +36,10 @@ const ReportModal: React.FC<ReportModalProps> = ({
 
   const [report, setReport] = useState<Report>(initialReport);
   const [isConfirmDeleteReportModalOpen, setIsConfirmDeleteReportModalOpen] = useState(false);
-  const [isConfirmRejectReportModalOpen, setIsConfirmRejectReportModalOpen] = useState(false);
 
   useEffect(() => {
     setReport(initialReport);
   }, [initialReport]);
-
-  const showConfirmRejectReportModal = () => {
-    setIsConfirmRejectReportModalOpen(true);
-  };
-
-  const closeConfirmRejectReportModal = () => {
-    setIsConfirmRejectReportModalOpen(false);
-  };
 
   const showConfirmDeleteReportModal = () => {
     setIsConfirmDeleteReportModalOpen(true);
@@ -101,63 +89,71 @@ const ReportModal: React.FC<ReportModalProps> = ({
           <div className="flex flex-row justify-between items-start my-[2%] px-[3%]">
             <ReportMap report={report} />
             <ReportDetail report={report} setReport={setReport} />
-            <ReportImages report={report} />
+            {/* Filter images based on status */}
+            <ReportImages
+              report={{
+                ...report,
+                images: isReportStatusSuccess(report)
+                  ? report.images
+                  : report.images.filter(img => img.phase === "BEFORE"),
+              }}
+            />
           </div>
 
           <div className="flex justify-center space-x-6">
             {isReportStatusPendingOrProcessing(report) && (
               <UpdateReportButton report={report} />
             )}
-            {
-              isReportStatusRejectedOrSuccess(report) ? (
-                <Button
-                  variant="contained"
-                  sx={{
-                    minWidth: "7dvw",
-                    height: "6dvh",
-                    border: "1px solid rgba(0, 0, 0, 0.2)",
-                    backgroundColor: "#FF0000",
-                    "&:hover": { backgroundColor: "#CC0000" },
-                    color: "white",
-                    fontSize: "2vmin",
-                    borderRadius: "10px",
-                    fontFamily: "kanit",
-                  }}
-                  onClick={showConfirmDeleteReportModal}
-                >
-                ลบ
-                </Button>
-              ) :
-                <Button
-                  variant="contained"
-                  sx={{
-                    minWidth: "7dvw",
-                    height: "6dvh",
-                    border: "1px solid rgba(0, 0, 0, 0.2)",
-                    backgroundColor: "#FF0000",
-                    "&:hover": { backgroundColor: "#CC0000" },
-                    color: "white",
-                    fontSize: "2vmin",
-                    borderRadius: "10px",
-                    fontFamily: "kanit",
-                  }}
-                  onClick={showConfirmRejectReportModal}
-                >
-                ยกเลิกคำร้องขอ
-                </Button>
-            }
-              <DeleteModal
-                report={report}
-                isConfirmDeleteReportModalOpen={isConfirmDeleteReportModalOpen}
-                onConfirmDeleteReportModalClose={closeConfirmDeleteReportModal}
-                onReportDetailModalClose={onReportDetailModalClose}
-              />
-              <RejectReportModal
-                report={report}
-                isConfirmDeleteReportModalOpen={isConfirmRejectReportModalOpen}
-                onConfirmDeleteReportModalClose={closeConfirmRejectReportModal}
-                onReportDetailModalClose={onReportDetailModalClose}
-              />
+            {report?.reportStatus?.status === ReportStatusEnum.enum.PROCESS && (
+              <Button
+                variant="contained"
+                sx={{
+                  minWidth: "7dvw",
+                  height: "6dvh",
+                  border: "1px solid rgba(0, 0, 0, 0.2)",
+                  backgroundColor: "#06C755",
+                  "&:hover": { backgroundColor: "#059944" },
+                  color: "white",
+                  fontSize: "2vmin",
+                  borderRadius: "10px",
+                  fontFamily: "kanit",
+                }}
+                onClick={async () => {
+                  const selectedAssistances = report.reportAssistances.filter(a => a.quantity > 0);
+                  const description = selectedAssistances.map(a => `${a.assistanceType.name}: ${a.quantity} ${a.assistanceType.unit}`).join("\n");
+                  await shareReportToLine({
+                    title: `รายงานช่วยเหลือ: ${report.firstName} ${report.lastName}`,
+                    description,
+                    imageUrl: report.images[0]?.url || "/images/bg.png",
+                  });
+                }}
+              >
+                แชร์ไปที่ LINE
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              sx={{
+                minWidth: "7dvw",
+                height: "6dvh",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                backgroundColor: "#FF0000",
+                "&:hover": { backgroundColor: "#CC0000" },
+                color: "white",
+                fontSize: "2vmin",
+                borderRadius: "10px",
+                fontFamily: "kanit",
+              }}
+              onClick={showConfirmDeleteReportModal}
+            >
+              ลบ
+            </Button>
+            <DeleteModal
+              report={report}
+              isConfirmDeleteReportModalOpen={isConfirmDeleteReportModalOpen}
+              onConfirmDeleteReportModalClose={closeConfirmDeleteReportModal}
+              onReportDetailModalClose={onReportDetailModalClose}
+            />
           </div>
         </div>
       </div>

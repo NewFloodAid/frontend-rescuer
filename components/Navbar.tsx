@@ -10,7 +10,6 @@ const NavBar = () => {
   // Initialize state for exportParams
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const priorities = "0,1,2,3";
 
   return (
     <div className="flex justify-between items-center bg-[#ff3388] h-[7dvh] rounded-bl-[38px] px-[2vw]">
@@ -26,7 +25,6 @@ const NavBar = () => {
       <div className="flex items-center space-x-[1dvw]">
         <ExportButton 
           text="EXPORT" 
-          params={{ priorities }} 
           startDate={startDate}
           endDate={endDate}
           setStartDate={setStartDate}

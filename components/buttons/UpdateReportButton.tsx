@@ -26,15 +26,15 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
           backgroundColor: "#3B82F6",
           "&:hover": { backgroundColor: "#2563EB" },
         };
+      case ReportStatusEnum.enum.SENT:
+        return {
+          backgroundColor: "#00BFFF",
+          "&:hover": { backgroundColor: "#009ACD" },
+        };
       case ReportStatusEnum.enum.SUCCESS:
         return {
           backgroundColor: "#22C55E",
           "&:hover": { backgroundColor: "#16A34A" },
-        };
-      case ReportStatusEnum.enum.REJECTED:
-        return {
-          backgroundColor: "#EF4444",
-          "&:hover": { backgroundColor: "#DC2626" },
         };
       default:
         return {
@@ -50,12 +50,15 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
       return;
     }
 
-    let newStatus: string;
+    let newStatus: string | undefined;
 
     if (report.reportStatus.status === ReportStatusEnum.enum.PENDING) {
       newStatus = ReportStatusEnum.enum.PROCESS;
+    } else if (report.reportStatus.status === ReportStatusEnum.enum.PROCESS) {
+      newStatus = ReportStatusEnum.enum.SENT;
     } else {
-      newStatus = ReportStatusEnum.enum.SUCCESS;
+      // SENT and SUCCESS cannot be updated here
+      return;
     }
 
     const newReportStatus = reportStatusQuery.data.find(
@@ -81,6 +84,8 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
   const reportStatusLabel =
     report.reportStatus.status === ReportStatusEnum.enum.PENDING
       ? "รับคำขอ"
+      : report.reportStatus.status === ReportStatusEnum.enum.PROCESS
+      ? "ส่งต่อ"
       : "อัพเดต";
 
   if(reportStatusQuery.isPending) {

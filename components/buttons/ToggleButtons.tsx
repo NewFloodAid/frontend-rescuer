@@ -1,72 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import { useQueryGetReportStatuses } from "@/api/reportStatus";
+import { StatusMappingToTH, StatusMappingENGToColor } from "@/constants/report_status";
 
 type ToggleButtonsProps = {
   onChangeReportsQueryParam: (
     field: string,
-    value: string | number | number[] | null
+    value: string | string[] | number | number[] | null
   ) => void;
 };
-
-const buttons = [
-  { id: 1, label: "ไม่เร่งด่วน", color: "#0077FF", priority: 3 },
-  { id: 2, label: "เร่งด่วน", color: "#FFAE00", priority: 2 },
-  { id: 3, label: "ฉุกเฉิน", color: "#FF0000", priority: 1 },
-];
 
 const ToggleButtons: React.FC<ToggleButtonsProps> = ({
   onChangeReportsQueryParam,
 }) => {
-  const [selectedButtons, setSelectedButtons] = useState<number[]>([
-    1, 2, 3,
-  ]);
-
-  const handleButtonClick = (buttonId: number) => {
-    setSelectedButtons((prevSelected) => {
-      const newSelected = prevSelected.includes(buttonId)
-        ? prevSelected.filter((id) => id !== buttonId)
-        : [...prevSelected, buttonId];
-      return newSelected;
-    });
-  };
+  const { data: statusList = [], isPending } = useQueryGetReportStatuses({ isUser: false });
+  const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
 
   useEffect(() => {
-    const selectedPriorities = selectedButtons
-      .map((id) => buttons.find((button) => button.id === id)?.priority)
-      .filter((priority): priority is number => priority !== undefined);
-    onChangeReportsQueryParam(
-      "priorities",
-      selectedPriorities.length !== 0 ? selectedPriorities : []
-    );
-  }, [selectedButtons, onChangeReportsQueryParam]);
+    onChangeReportsQueryParam("reportStatusId", selectedStatusId);
+  }, [selectedStatusId, onChangeReportsQueryParam]);
+
+  if (isPending) return <div>Loading...</div>;
+
+  const handleButtonClick = (buttonId: number) => {
+    if (selectedStatusId === buttonId) {
+      setSelectedStatusId(null); // Deselect if clicking the same button
+    } else {
+      setSelectedStatusId(buttonId);
+    }
+  };
 
   return (
     <div className="grow">
-      {buttons.map((button) => (
+      {statusList.map((button) => (
         <Button
           key={button.id}
           variant="contained"
           onClick={() => handleButtonClick(button.id)}
           sx={{
-            height: "4.5dvh",
-            paddingInline: "3%",
-            marginRight: "2%",
+            height: "5dvh",
+            paddingInline: "2%",
+            marginRight: "1%",
             fontFamily: "kanit",
-            fontSize: "2vmin",
+            fontSize: "2.3vmin",
             border: "1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "30px",
-            backgroundColor: selectedButtons.includes(button.id)
-              ? button.color
-              : "#E0E0E0",
-            color: selectedButtons.includes(button.id) ? "#FFFFFF" : "#000000",
+            borderRadius: "55px",
+            backgroundColor:
+              selectedStatusId === null
+                ? StatusMappingENGToColor[button.status]
+                : selectedStatusId === button.id
+                  ? StatusMappingENGToColor[button.status]
+                  : "#E0E0E0",
+            color: "#FFFFFF",
             "&:hover": {
-              backgroundColor: selectedButtons.includes(button.id)
-                ? button.color
-                : "#E0E0E0",
+              backgroundColor:
+                selectedStatusId === null
+                  ? StatusMappingENGToColor[button.status]
+                  : selectedStatusId === button.id
+                    ? StatusMappingENGToColor[button.status]
+                    : "#E0E0E0",
             },
           }}
         >
-          {button.label}
+          {StatusMappingToTH[button.status] === "กำลังดำเนินการ" || StatusMappingToTH[button.status] === "รอดำเนินการ"
+            ? "รอดำเนินการ"
+            : StatusMappingToTH[button.status]}
         </Button>
       ))}
     </div>

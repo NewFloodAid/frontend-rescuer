@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import NavBar from "@/components/Navbar";
-import PriorityList from "@/components/search/PriorityList";
 import { useQueryGetReports } from "@/api/report";
 import MainMap from "@/components/map/MainMap";
 import SearchPart from "@/components/search/Search";
@@ -14,11 +13,10 @@ import { REPORT_ITEM_PER_PAGE } from "@/constants/pagination";
 import { isAuthenticated } from "@/api/login";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
+import StatusList from "@/components/search/PriorityList";
 
 export default function Main() {
-  const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({
-    priorities: [0, 1, 2, 3],
-  });
+  const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({});
   const queryReports = useQueryGetReports(queryParams);
   const [searchInput, setSearchInput] = useState("");
   const [page, setPage] = useState(1);
@@ -57,7 +55,7 @@ export default function Main() {
   };
 
   const onChangeReportsQueryParam = useCallback(
-    (field: string, value: string | number | number[] | null) => {
+    (field: string, value: string | number | string[] | number[] | null) => {
       setQueryParams((prevParams) => ({ ...prevParams, [field]: value }));
     },
     []
@@ -84,7 +82,7 @@ export default function Main() {
             <MainMap reports={filteredReports} />
           </div>
           <div className="flex flex-grow justify-center">
-            <PriorityList reports={filteredReports} />
+            <StatusList reports={filteredReports} />
           </div>
         </div>
       </div>

@@ -10,8 +10,8 @@ import {
 } from "@/constants/report_status";
 import { useState } from "react";
 import ReportModal from "./ReportModal";
-import { PriorityMappingToColor } from "@/constants/priority";
 import { useMap } from "@vis.gl/react-google-maps";
+import { shareReportToLine } from "@/libs/liff";
 
 interface ReportCardProps {
   report: Report;
@@ -39,17 +39,15 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
     setIsReportDetailModalOpen(false);
   };
 
-  const borderColor = PriorityMappingToColor[Number(report.priority)];
-
   return (
     <>
       <Card
         variant="outlined"
         sx={{
           width: "22dvw",
-          height: "38dvh",
-          border: `2px solid ${borderColor}`,
-          borderRadius: "10px",
+          height: "45dvh",
+          border: `2.5px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}`,
+          borderRadius: "12px",
           fontFamily: "kanit",
           marginBottom: "1%",
           padding: "1%",
@@ -62,58 +60,147 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         onClick={() => showReportDetailModal()}
         onMouseEnter={() => handleMarkerHover(report)}
       >
-        <Grid2>
-          <div className="flex flex-row justify-between items-center text-[1.5vmin] mb-[1%]">
-            ผู้ร้อง {report.firstName} {report.lastName}
-            <DateTimeDisplay dateTime={report.createdAt} />
-          </div>
-          <div
-            className="flex justify-end mb-[2%] text-[2vmin]"
-            style={{
-              color: StatusMappingENGToColor[report?.reportStatus?.status],
-            }}
-          >
-            {StatusMappingToTH[report?.reportStatus?.status]}
-          </div>
-          <div className="flex justify-between items-start">
-            <div className="text-[1.5vmin]">
-              {report.reportAssistances
-                .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
-                .map((assistance) =>
-                  assistance.quantity > 0 ? (
-                    <div className="mb-4" key={assistance.assistanceType.id}>
-                      <div className="font-semibold">
-                        {assistance.assistanceType.name}: {assistance.quantity}{" "}
-                        {assistance.assistanceType.unit}
-                      </div>
-                    </div>
-                  ) : null
-                )}
-            </div>
-            {report.images.length > 0 && (
-              <div>
-                <CardMedia
-                  component="img"
-                  image={report.images[0]?.url || "/images/bg.png"}
-                  alt="Report Image"
-                  sx={{
-                    width: "12.5vmin",
-                    height: "auto",
-                    aspectRatio: "1 / 1",
-                    objectFit: "cover",
-                    borderRadius: "10px",
-                  }}
-                />
+        {report.reportStatus?.status === "SUCCESS" ? (
+          <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+            {/* Upper half: original report */}
+            <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4 }}>
+              <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
+                ผู้ร้อง {report.firstName} {report.lastName}
+                <DateTimeDisplay dateTime={report.createdAt} />
               </div>
-            )}
+              <div
+                className="flex justify-end mb-[2%] text-[2.5vmin] font-semibold"
+                style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
+              >
+                {StatusMappingToTH[report?.reportStatus?.status]}
+              </div>
+              <div className="flex justify-between items-start">
+                <div className="text-[2vmin]">
+                  {report.reportAssistances
+                    .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
+                    .map((assistance) =>
+                      assistance.quantity > 0 ? (
+                        <div className="mb-4" key={assistance.assistanceType.id}>
+                          <div className="font-semibold">
+                            {assistance.assistanceType.name}: {assistance.quantity} {assistance.assistanceType.unit}
+                          </div>
+                          {/* Always show additional detail */}
+                            <div className="text-[1.5xvmin] mt-1">{report.additionalDetail}</div>
+                        </div>
+                      ) : null
+                    )}
+                </div>
+                {/* Show BEFORE images only in upper half */}
+                {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
+                  <div>
+                    <CardMedia
+                      component="img"
+                      image={report.images.find(img => img.phase === "BEFORE")?.url || "/images/bg.png"}
+                      alt="Report Image"
+                      sx={{
+                        width: "12.5vmin",
+                        height: "auto",
+                        aspectRatio: "1 / 1",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+              
+            </div>
+            {/* Lower half: afterAdditionalDetail and AFTER images */}
+            <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
+                <span className="font-bold">FEEDBACK</span>
+                <DateTimeDisplay dateTime={report.updatedAt} />
+              </div>
+              <div className="flex justify-between items-start">
+                <div className="text-[2vmin]">
+                  {report.afterAdditionalDetail || ""}
+                </div>
+                {/* Show AFTER images only in lower half */}
+                {report.images.filter(img => img.phase === "AFTER").length > 0 && (
+                  <div>
+                    <CardMedia
+                      component="img"
+                      image={report.images.find(img => img.phase === "AFTER")?.url || "/images/bg.png"}
+                      alt="After Image"
+                      sx={{
+                        width: "12.5vmin",
+                        height: "auto",
+                        aspectRatio: "1 / 1",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Always show phone numbers at the bottom */}
+            <div className="flex flex-row justify-between items-center text-[2vmin] mt-auto">
+              <div>เบอร์โทร {report.mainPhoneNumber}</div>
+              <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
+            </div>
           </div>
-        </Grid2>
-        <Grid2>
-          <div className="flex flex-row justify-between items-center text-[1.5vmin]">
-            <div>เบอร์โทร {report.mainPhoneNumber}</div>
-            <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
+        ) : (
+          <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
+                ผู้ร้อง {report.firstName} {report.lastName}
+                <DateTimeDisplay dateTime={report.createdAt} />
+              </div>
+              <div
+                className="flex justify-end mb-[2%] text-[2.5vmin] font-semibold"
+                style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
+              >
+                {StatusMappingToTH[report?.reportStatus?.status]}
+              </div>
+              <div className="flex justify-between items-start">
+                <div className="text-[2vmin]">
+                  {report.reportAssistances
+                    .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
+                    .map((assistance) =>
+                      assistance.quantity > 0 ? (
+                        <div className="mb-4" key={assistance.assistanceType.id}>
+                          <div className="font-semibold">
+                            {assistance.assistanceType.name}: {assistance.quantity}{" "}
+                            {assistance.assistanceType.unit}
+                          </div>
+                          {/* Always show additional detail */}
+                          <div className="text-[2vmin] mt-1">{report.additionalDetail}</div>
+                        </div>
+                      ) : null
+                    )}
+                </div>
+                {/* Only show BEFORE images if not SUCCESS */}
+                {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
+                  <div>
+                    <CardMedia
+                      component="img"
+                      image={report.images.find(img => img.phase === "BEFORE")?.url || "/images/bg.png"}
+                      alt="Report Image"
+                      sx={{
+                        width: "12.5vmin",
+                        height: "auto",
+                        aspectRatio: "1 / 1",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Always show phone numbers at the bottom */}
+            <div className="flex flex-row justify-between items-center text-[2vmin] mt-auto">
+              <div>เบอร์โทร {report.mainPhoneNumber}</div>
+              <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
+            </div>
           </div>
-        </Grid2>
+        )}
       </Card>
       <ReportModal
         initialReport={report}

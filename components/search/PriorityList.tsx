@@ -1,7 +1,7 @@
 import { Paper, Stack } from "@mui/material";
 import Place from "@mui/icons-material/Place";
 import { Report } from "@/types/report";
-import { PriorityMappingToName } from "@/constants/priority";
+import { StatusMappingToTH, StatusMappingENGToColor } from "@/constants/report_status";
 
 interface Params {
   pColor: string;
@@ -27,6 +27,7 @@ function Priority({
       paddingLeft: "3%",
       border: "1px solid rgba(0, 0, 0, 0.2)",
       backgroundColor: outerBgColor,
+      borderRadius: "12px", // Added border radius
     },
     innerPaper: {
       height: "5dvh",
@@ -38,6 +39,7 @@ function Priority({
       fontWeight: "600",
       border: "1px solid rgba(0, 0, 0, 0.2)",
       color: cardTextColor,
+      borderRadius: "12px", // Added border radius
     },
     leftSection: {
       display: "flex",
@@ -64,66 +66,46 @@ function Priority({
   );
 }
 
-interface PriorityListProps {
-  reports: Report[];
-}
-
-const PriorityList = ({ reports }: PriorityListProps) => {
-  const priorityCounts = reports.reduce(
+const StatusList = ({ reports }: { reports: Report[] }) => {
+  const statusCounts = reports.reduce(
     (acc: { [key: string]: number }, report) => {
-      const priorityName = PriorityMappingToName[report.priority];
-      acc[priorityName] = (acc[priorityName] || 0) + 1;
+      const status = report.reportStatus.status;
+      acc[status] = (acc[status] || 0) + 1;
       return acc;
     },
-    { ฉุกเฉิน: 0, เร่งด่วน: 0, ไม่เร่งด่วน: 0, เสร็จสิ้น: 0 }
+    { PENDING: 0, PROCESS: 0, SENT: 0, SUCCESS: 0 }
   );
+
+  const getStatusProps = (status: string) => ({
+    pColor: StatusMappingENGToColor[status],
+    pName: StatusMappingToTH[status],
+    cardText: statusCounts[status],
+    outerBgColor: "#FFFFFF",
+    cardTextColor: StatusMappingENGToColor[status],
+  });
 
   return (
     <div className="font-kanit">
-      <Stack direction="column" sx={{ width: "18dvw" }} spacing={2}>
+      <Stack direction="column" sx={{ width: "15dvw" }} spacing={2}>
         <Priority
-          pColor="#FFFFFF"
+          pColor="#ffffffff"
           pName="ทั้งหมด"
           cardText={
-            priorityCounts["ฉุกเฉิน"] +
-            priorityCounts["เร่งด่วน"] +
-            priorityCounts["ไม่เร่งด่วน"] +
-            priorityCounts["เสร็จสิ้น"] 
+            statusCounts["PENDING"] +
+            statusCounts["PROCESS"] +
+            statusCounts["SENT"] +
+            statusCounts["SUCCESS"]
           }
-          outerBgColor="#505050"
-          cardTextColor="#000000"
+          outerBgColor="#929292ff"
+          cardTextColor="#000000ff"
         />
-        <Priority
-          pColor="#FF0000"
-          pName="ฉุกเฉิน"
-          cardText={priorityCounts["ฉุกเฉิน"]}
-          outerBgColor="#FFFFFF"
-          cardTextColor="#FF0000"
-        />
-        <Priority
-          pColor="#FFAE00"
-          pName="เร่งด่วน"
-          cardText={priorityCounts["เร่งด่วน"]}
-          outerBgColor="#FFFFFF"
-          cardTextColor="#FFAE00"
-        />
-        <Priority
-          pColor="#0077FF"
-          pName="ไม่เร่งด่วน"
-          cardText={priorityCounts["ไม่เร่งด่วน"]}
-          outerBgColor="#FFFFFF"
-          cardTextColor="#0077FF"
-        />
-        <Priority
-          pColor="#00FF00"
-          pName="เสร็จสิ้น"
-          cardText={priorityCounts["เสร็จสิ้น"]}
-          outerBgColor="#FFFFFF"
-          cardTextColor="#00FF00"
-        />
+        <Priority {...getStatusProps("PENDING")} />
+        <Priority {...getStatusProps("PROCESS")} />
+        <Priority {...getStatusProps("SENT")} />
+        <Priority {...getStatusProps("SUCCESS")} />
       </Stack>
     </div>
   );
 };
 
-export default PriorityList;
+export default StatusList;

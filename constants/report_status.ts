@@ -1,21 +1,21 @@
 const StatusMappingToTH: { [key: string]: string } = {
   PENDING: "รอดำเนินการ",
-  REJECTED: "ตรวจสอบแล้วไม่พบเหตุ",
-  PROCESS: "กำลังดำเนินการ",
+  PROCESS: "รวบรวมข้อมูล",
+  SENT: "ส่งเรื่องไปแล้ว",
   SUCCESS: "เสร็จสิ้น",
 };
 
 const StatusMappingENGToColor: { [key: string]: string } = {
-  PENDING: "#FFA500", // Orange
-  REJECTED: "#808080", // Grey
-  PROCESS: "#0000FF", // Blue
-  SUCCESS: "#008000", // Green
+  PENDING: "#ff0000ff",
+  PROCESS: "#FFA500",
+  SENT: "#0088ffff",
+  SUCCESS: "#00ac28ff",
 };
 
 const StatusMappingToENG: { [key: string]: string } = {
   รอดำเนินการ: "PENDING",
-  ตรวจสอบแล้วไม่พบเหตุ: "REJECTED",
-  กำลังดำเนินการ: "PROCESS",
+  รวบรวมข้อมูล: "PROCESS",
+  ส่งต่อไปแล้ว: "SENT",
   เสร็จสิ้น: "SUCCESS",
 };
   

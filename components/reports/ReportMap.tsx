@@ -7,7 +7,7 @@ import {
   AdvancedMarker,
   Pin,
 } from "@vis.gl/react-google-maps";
-import { PriorityMappingToColor } from "@/constants/priority";
+import { StatusMappingENGToColor } from "@/constants/report_status";
 
 interface ReportMapProps {
   report: Report;
@@ -24,11 +24,11 @@ const mapStyle = {
 
 const ReportMap: React.FC<ReportMapProps> = ({ report }) => {
   const [pinColor, setPinColor] = useState<string>(
-    PriorityMappingToColor[Number(report.priority)]
+    StatusMappingENGToColor[report?.reportStatus?.status]
   );
 
   useEffect(() => {
-    setPinColor(PriorityMappingToColor[Number(report.priority)]);
+    setPinColor(StatusMappingENGToColor[report?.reportStatus?.status]);
   }, [report]);
 
   return (

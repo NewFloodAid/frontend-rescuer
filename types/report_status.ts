@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const ReportStatusEnum = z.enum([
   "PENDING",
-  "REJECTED",
   "PROCESS",
+  "SENT",
   "SUCCESS",
 ]);
 

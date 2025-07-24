@@ -1,18 +1,18 @@
 "use client";
 import { useState } from "react";
-import { PriorityMappingToColor } from "@/constants/priority";
 import { Report } from "@/types/report";
 import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 import ReportModal from "../reports/ReportModal";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/constants/map";
+import { StatusMappingENGToColor } from "@/constants/report_status";
 
 interface MapProps {
   reports: Report[];
 }
 
 const mapStyle = {
-  width: "60dvw",
-  height: "37dvh",
+  width: "65dvw",
+  height: "52dvh",
   border: "1px solid rgba(0, 0, 0, 0.5)",
   borderRadius: "10px",
   overflow: "hidden",
@@ -27,7 +27,6 @@ const MapWithMarkers: React.FC<{ reports: Report[] }> = ({ reports }) => {
   return (
     <>
       {reports.map((report) => {
-        const pinColor = PriorityMappingToColor[Number(report.priority)];
         return (
           <AdvancedMarker
             key={report.id}
@@ -38,8 +37,8 @@ const MapWithMarkers: React.FC<{ reports: Report[] }> = ({ reports }) => {
             onClick={() => handleMarkerClick(report)}
           >
             <Pin
-              background={pinColor}
-              borderColor={pinColor}
+              background={StatusMappingENGToColor[report?.reportStatus?.status] || "#000000"}
+              borderColor={StatusMappingENGToColor[report?.reportStatus?.status] || "#000000"}
               glyphColor={"#FFFFFF"}
             />
           </AdvancedMarker>
