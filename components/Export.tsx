@@ -35,7 +35,6 @@ const modalStyles = {
 
 interface ExportButtonProps {
   text: string;
-  params?: { priorities: string };
   startDate: string;
   endDate: string;
   setStartDate: React.Dispatch<React.SetStateAction<string>>;
@@ -44,28 +43,33 @@ interface ExportButtonProps {
 
 const ExportButton = ({
   text,
-  params,
   startDate,
   endDate,
   setStartDate,
   setEndDate,
 }: ExportButtonProps) => {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleExport = () => {
-    if (params) {
-      excel(startDate, endDate, params.priorities)
-        .then((response) => {
-          // handle success response
-          console.log(response);
-        })
-        .catch((error) => {
-          // handle error response
-          console.error(error);
-        });
+  const handleExport = async () => {
+    setIsLoading(true);
+    try {
+      const result = await excel(startDate, endDate);
+      if (result.success) {
+        console.log("Export successful");
+        handleClose();
+      } else {
+        console.error("Export failed:", result.message);
+        alert(`Export failed: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Export error:", error);
+      alert(`Export failed: ${(error as Error).message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,18 +102,16 @@ const ExportButton = ({
           <div className="flex justify-center items-center mt-[6%] gap-[3%]">
             <Button
               variant="contained"
+              disabled={isLoading}
               sx={{
                 ...buttonStyles,
                 border: "1px solid rgba(0, 0, 0, 0.2)",
                 backgroundColor: "#52b202 ",
                 color: "white",
               }}
-              onClick={() => {
-                handleExport();
-                handleClose();
-              }}
+              onClick={handleExport}
             >
-              Download
+              {isLoading ? "Downloading..." : "Download"}
               <DownloadIcon />
             </Button>
             <Button

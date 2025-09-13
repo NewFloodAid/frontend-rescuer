@@ -11,7 +11,6 @@ import {
 import { useState } from "react";
 import ReportModal from "./ReportModal";
 import { useMap } from "@vis.gl/react-google-maps";
-import { shareReportToLine } from "@/libs/liff";
 
 interface ReportCardProps {
   report: Report;

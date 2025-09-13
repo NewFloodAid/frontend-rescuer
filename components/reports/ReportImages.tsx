@@ -14,7 +14,7 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
     <Card
       elevation={0}
       sx={{
-        width: "26dvw",
+        width: "20dvw",
         height: "auto",
         aspectRatio: "1 / 1",
         border: hasImages ? "none" : "1px solid rgba(0, 0, 0, 0.2)",
@@ -25,7 +25,7 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
       }}
     >
       {hasImages ? (
-        <div className="flex flex-wrap gap-[2%]">
+        <div className="flex flex-wrap gap-[2%] w-full h-full p-[2%]">
           {imagesToShow.map((image, index) => (
             <CardMedia
               key={index}
@@ -34,11 +34,15 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
               alt={`Report image ${index + 1}`}
               sx={{
                 width: "49%",
+                height: "49%",
                 aspectRatio: "1 / 1",
                 objectFit: "cover",
                 border: "1px solid rgba(0, 0, 0, 0.5)",
                 borderRadius: "10px",
-                marginBottom: "2%",
+                backgroundColor: "#FFFFFF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             />
           ))}
@@ -47,10 +51,10 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
               key={`placeholder-${index}`}
               style={{
                 width: "49%",
+                height: "49%",
                 aspectRatio: "1 / 1",
                 border: "1px solid rgba(0, 0, 0, 0.2)",
                 borderRadius: "10px",
-                marginBottom: "2%",
                 backgroundColor: "#F0F0F0",
               }}
             />

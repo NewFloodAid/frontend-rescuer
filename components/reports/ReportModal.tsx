@@ -9,7 +9,6 @@ import UpdateReportButton from "../buttons/UpdateReportButton";
 import DeleteModal from "./DeleteModal";
 import ReportDetail from "./ReportDetail";
 import { DateDisplay, TimeDisplay } from "../DateTimeDisplay";
-import { shareReportToLine } from "@/libs/liff";
 
 interface ReportModalProps {
   initialReport: Report;
@@ -49,93 +48,207 @@ const ReportModal: React.FC<ReportModalProps> = ({
     setIsConfirmDeleteReportModalOpen(false);
   };
 
+  // Filter images by phase
+  const beforeImages = report.images.filter(img => img.phase === "BEFORE");
+  const afterImages = report.images.filter(img => img.phase === "AFTER");
+
   return (
     <Modal open={isReportDetailModalOpen} onClose={onReportDetailModalClose}>
-      <div className="flex h-screen items-center justify-center font-kanit">
-        <div className="w-[90dvw] min-h-[60dvh] rounded-[10px] bg-white flex flex-col pb-[2%]">
-          <div className="w-full h-[6dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
-            <div className="w-[20%]" />
-            <div className="w-[60%] flex flex-row justify-between">
-              <div>
-                คำร้องขอของ: {report.firstName} {report.lastName}
+      <div className="flex h-screen items-center justify-center font-kanit p-4">
+        <div className="w-[90vw] max-w-[1200px] max-h-[85vh] rounded-[10px] bg-white flex flex-col pb-[1%] overflow-y-auto">
+          {isReportStatusSuccess(report) ? (
+            // Two-section layout for SUCCESS status
+            <>
+              {/* Upside Section - Original Report */}
+              <div className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
+                <div className="w-[20%]" />
+                <div className="w-[60%] flex flex-row justify-between">
+                  <div>
+                    คำร้องขอของ: {report.firstName} {report.lastName}
+                  </div>
+                  <div>
+                    <DateDisplay dateTime={report.createdAt} />
+                  </div>
+                  <div>
+                    เวลา <TimeDisplay dateTime={report.createdAt} />
+                  </div>
+                </div>
+                <div className="w-[20%] flex justify-end pr-[1%]">
+                  <IconButton
+                    sx={{
+                      width: "4dvh",
+                      height: "4dvh",
+                    }}
+                    onClick={onReportDetailModalClose}
+                  >
+                    <CancelIcon
+                      sx={{
+                        width: "4dvh",
+                        height: "auto",
+                        aspectRatio: "1 / 1",
+                        color: "#FF0000",
+                      }}
+                    />
+                  </IconButton>
+                </div>
               </div>
-              <div>
-                <DateDisplay dateTime={report.createdAt} />
-              </div>
-              <div>
-                เวลา <TimeDisplay dateTime={report.createdAt} />
-              </div>
-            </div>
-            <div className="w-[20%] flex justify-end pr-[1%]">
-              <IconButton
-                sx={{
-                  width: "4.5dvh",
-                  height: "4.5dvh",
-                }}
-                onClick={onReportDetailModalClose}
-              >
-                <CancelIcon
-                  sx={{
-                    width: "4.5dvh",
-                    height: "auto",
-                    aspectRatio: "1 / 1",
-                    color: "#FF0000",
-                  }}
-                />
-              </IconButton>
-            </div>
-          </div>
 
-          <div className="flex flex-row justify-between items-start my-[2%] px-[3%]">
-            <ReportMap report={report} />
-            <ReportDetail report={report} setReport={setReport} />
-            {/* Filter images based on status */}
-            <ReportImages
-              report={{
-                ...report,
-                images: isReportStatusSuccess(report)
-                  ? report.images
-                  : report.images.filter(img => img.phase === "BEFORE"),
-              }}
-            />
-          </div>
+              <div className="flex flex-row justify-between items-start my-[2%] px-[3%] gap-6">
+                <div className="w-[33.33%]">
+                  <ReportMap report={report} />
+                </div>
+                <div className="w-[33.33%]">
+                  <ReportDetail report={report} setReport={setReport} />
+                </div>
+                <div className="w-[33.33%]">
+                  <ReportImages
+                    report={{
+                      ...report,
+                      images: beforeImages,
+                    }}
+                  />
+                </div>
+              </div>
 
-          <div className="flex justify-center space-x-6">
+              {/* Downside Section - Feedback */}
+              <div className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white mt-[0%]">
+                <div className="w-[20%]" />
+                <div className="w-[60%] flex flex-row justify-between">
+                  <div>
+                    FEEDBACK
+                  </div>
+                  <div>
+                    <DateDisplay dateTime={report.updatedAt || report.createdAt} />
+                  </div>
+                  <div>
+                    เวลา <TimeDisplay dateTime={report.updatedAt || report.createdAt} />
+                  </div>
+                </div>
+                <div className="w-[20%]" />
+              </div>
+
+              <div className="flex flex-row justify-between items-start my-[2%] px-[3%] gap-6">
+                {/* Solved Stamp instead of map */}
+                <div className="w-[33.33%]">
+                  <img 
+                    src="/images/solved.png" 
+                    alt="Solved" 
+                    style={{
+                      width: "20dvw",
+                      height: "auto",
+                      aspectRatio: "1 / 1",
+                      objectFit: "contain",
+                      border: "1px solid rgba(0,0,0,0.5)",
+                      borderRadius: "10px",
+                      overflow: "hidden"
+                    }}
+                  />
+                </div>
+                <div className="w-[33.33%]">
+                  {/* Custom Feedback Detail Component */}
+                  <div className="w-[20dvw] h-auto aspect-square border border-black/50 rounded-[10px] shadow-inner overflow-y-auto">
+                    <div className="flex justify-center text-[2.5vmin] mt-[4%] mb-[2%] font-bold text-black">
+                      FEEDBACK
+                    </div>
+                    <div className="px-[5%] text-[1.75vmin]">
+                      {report.reportAssistances.map((assistance) =>
+                        assistance.quantity > 0 ? (
+                          <div key={assistance.assistanceType.id} className="flex items-center mb-[2%]">
+                            <input
+                              type="checkbox"
+                              checked={assistance.isActive}
+                              readOnly
+                              className="mr-[2%]"
+                            />
+                            <span>
+                              {assistance.assistanceType.name}: {assistance.quantity} งาน
+                            </span>
+                          </div>
+                        ) : null
+                      )}
+                      <div className="mt-[2%] mb-[4%] text-[1.75vmin]">
+                        <div className="px-[3%] font-semibold">รายละเอียดเพิ่มเติม:</div>
+                        <div className="w-full px-[5%] font-normal break-words">
+                          {report.afterAdditionalDetail || "-"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[33.33%]">
+                  <ReportImages
+                    report={{
+                      ...report,
+                      images: afterImages,
+                    }}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            // Original single-section layout for other statuses
+            <>
+              <div className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
+                <div className="w-[20%]" />
+                <div className="w-[60%] flex flex-row justify-between">
+                  <div>
+                    คำร้องขอของ: {report.firstName} {report.lastName}
+                  </div>
+                  <div>
+                    <DateDisplay dateTime={report.createdAt} />
+                  </div>
+                  <div>
+                    เวลา <TimeDisplay dateTime={report.createdAt} />
+                  </div>
+                </div>
+                <div className="w-[20%] flex justify-end pr-[1%]">
+                  <IconButton
+                    sx={{
+                      width: "4dvh",
+                      height: "4dvh",
+                    }}
+                    onClick={onReportDetailModalClose}
+                  >
+                    <CancelIcon
+                      sx={{
+                        width: "4dvh",
+                        height: "auto",
+                        aspectRatio: "1 / 1",
+                        color: "#FF0000",
+                      }}
+                    />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="flex flex-row justify-between items-start my-[2%] px-[3%] gap-6">
+                <div className="w-[33.33%]">
+                  <ReportMap report={report} />
+                </div>
+                <div className="w-[33.33%]">
+                  <ReportDetail report={report} setReport={setReport} />
+                </div>
+                <div className="w-[33.33%]">
+                  <ReportImages
+                    report={{
+                      ...report,
+                      images: beforeImages,
+                    }}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="flex justify-center space-x-6 mt-[-1%]">
             {isReportStatusPendingOrProcessing(report) && (
               <UpdateReportButton report={report} />
-            )}
-            {report?.reportStatus?.status === ReportStatusEnum.enum.PROCESS && (
-              <Button
-                variant="contained"
-                sx={{
-                  minWidth: "7dvw",
-                  height: "6dvh",
-                  border: "1px solid rgba(0, 0, 0, 0.2)",
-                  backgroundColor: "#06C755",
-                  "&:hover": { backgroundColor: "#059944" },
-                  color: "white",
-                  fontSize: "2vmin",
-                  borderRadius: "10px",
-                  fontFamily: "kanit",
-                }}
-                onClick={async () => {
-                  const selectedAssistances = report.reportAssistances.filter(a => a.quantity > 0);
-                  const description = selectedAssistances.map(a => `${a.assistanceType.name}: ${a.quantity} ${a.assistanceType.unit}`).join("\n");
-                  await shareReportToLine({
-                    title: `รายงานช่วยเหลือ: ${report.firstName} ${report.lastName}`,
-                    description,
-                    imageUrl: report.images[0]?.url || "/images/bg.png",
-                  });
-                }}
-              >
-                แชร์ไปที่ LINE
-              </Button>
             )}
             <Button
               variant="contained"
               sx={{
                 minWidth: "7dvw",
-                height: "6dvh",
+                height: "5dvh",
                 border: "1px solid rgba(0, 0, 0, 0.2)",
                 backgroundColor: "#FF0000",
                 "&:hover": { backgroundColor: "#CC0000" },

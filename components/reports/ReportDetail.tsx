@@ -31,7 +31,7 @@ const ReportDetail: React.FC<ReportDetailProps> = ({ report, setReport }) => {
   };
 
   return (
-    <div className="w-[26dvw] h-auto aspect-square border border-black/50  rounded-[10px] shadow-inner overflow-y-auto">
+    <div className="w-[20dvw] h-auto aspect-square border border-black/50  rounded-[10px] shadow-inner overflow-y-auto">
       <div
         className="flex justify-center text-[2.5vmin] mt-[4%] mb-[2%]"
         style={{
