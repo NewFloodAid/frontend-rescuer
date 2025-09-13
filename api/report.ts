@@ -103,3 +103,26 @@ export const useMutationDeleteReport = () => {
     },
   });
 };
+
+// Download a report PDF by ID
+export const downloadReportPdf = async (reportId: number) => {
+  try {
+    const response = await axiosClient.get(`/reports/${reportId}/pdf`, {
+      headers: getAuthHeaders(),
+      responseType: "blob",
+    });
+
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `report_${reportId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Failed to download PDF:", error);
+    throw error;
+  }
+};

@@ -9,6 +9,7 @@ import UpdateReportButton from "../buttons/UpdateReportButton";
 import DeleteModal from "./DeleteModal";
 import ReportDetail from "./ReportDetail";
 import { DateDisplay, TimeDisplay } from "../DateTimeDisplay";
+import { downloadReportPdf } from "@/api/report";
 
 interface ReportModalProps {
   initialReport: Report;
@@ -189,7 +190,18 @@ const ReportModal: React.FC<ReportModalProps> = ({
             // Original single-section layout for other statuses
             <>
               <div className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
-                <div className="w-[20%]" />
+                <div className="w-[20%] flex items-center pl-[1%]">
+                  {report.reportStatus.status === ReportStatusEnum.enum.PROCESS && (
+                    <img
+                      src="/images/share-symbol.png"
+                      alt="Download PDF"
+                      title="Download PDF"
+                      className="cursor-pointer"
+                      style={{ height: "4dvh", width: "auto" }}
+                      onClick={() => downloadReportPdf(report.id)}
+                    />
+                  )}
+                </div>
                 <div className="w-[60%] flex flex-row justify-between">
                   <div>
                     คำร้องขอของ: {report.firstName} {report.lastName}
