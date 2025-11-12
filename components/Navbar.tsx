@@ -3,6 +3,19 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ExportButton from "./Export";
+import Button from "@mui/material/Button";
+
+const buttonStyles = {
+  width: "12dvw",
+  height: "5dvh",
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  fontSize: "2.5vmin",
+  fontFamily: "kanit",
+  backgroundColor: "white",
+  color: "#8c0000",
+};
 
 const NavBar = () => {
   const router = useRouter();
@@ -23,8 +36,22 @@ const NavBar = () => {
 
       {/* Navigation Buttons */}
       <div className="flex items-center space-x-[1dvw]">
-        <ExportButton 
-          text="EXPORT" 
+        <Button
+          variant="contained"
+          sx={buttonStyles}
+          onClick={() => router.push("/main")}
+        >
+          <b className="font-andika">MAIN MENU</b>
+        </Button>
+        <Button
+          variant="contained"
+          sx={buttonStyles}
+          onClick={() => router.push("/map")}
+        >
+          <b className="font-andika">MAP</b>
+        </Button>
+        <ExportButton
+          text="EXPORT"
           startDate={startDate}
           endDate={endDate}
           setStartDate={setStartDate}

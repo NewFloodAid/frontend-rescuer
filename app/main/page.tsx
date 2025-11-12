@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import NavBar from "@/components/Navbar";
 import { useQueryGetReports } from "@/api/report";
-import MainMap from "@/components/map/MainMap";
 import SearchPart from "@/components/search/Search";
 import ReportCard from "@/components/reports/ReportCard";
 import FilterPart from "@/components/search/Filter";
@@ -13,7 +12,6 @@ import { REPORT_ITEM_PER_PAGE } from "@/constants/pagination";
 import { isAuthenticated } from "@/api/login";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
-import StatusList from "@/components/search/PriorityList";
 
 export default function Main() {
   const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({});
@@ -76,14 +74,6 @@ export default function Main() {
       <div className="mt-[0.75%] px-[3%]">
         <div className="flex flex-row mb-[1%] items-center font-kanit gap-[2%]">
           <FilterPart onChangeReportsQueryParam={onChangeReportsQueryParam} />
-        </div>
-        <div className="flex items-center">
-          <div className="flex-none">
-            <MainMap reports={filteredReports} />
-          </div>
-          <div className="flex flex-grow justify-center">
-            <StatusList reports={filteredReports} />
-          </div>
         </div>
       </div>
 
