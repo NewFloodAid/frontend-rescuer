@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import FilterPart from "@/components/search/Filter";
 import StatusList from "@/components/search/PriorityList";
+import ReportCarousel from "@/components/search/ReportCarousel";
 
 export default function Map() {
   const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({});
@@ -59,8 +60,9 @@ export default function Map() {
           <div className="w-3/4">
             <MainMap reports={filteredReports} />
           </div>
-          <div className="flex justify-center w-1/4">
+          <div className="flex flex-col items-center w-1/4 gap-10">
             <StatusList reports={filteredReports} />
+            <ReportCarousel reports={filteredReports} />
           </div>
         </div>
       </div>

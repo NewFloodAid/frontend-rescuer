@@ -11,8 +11,8 @@ interface MapProps {
 }
 
 const mapStyle = {
-  width: "72dvw",
-  height: "82dvh",
+  width: "65dvw",
+  height: "83dvh",
   border: "1px solid rgba(0, 0, 0, 0.5)",
   borderRadius: "10px",
   overflow: "hidden",

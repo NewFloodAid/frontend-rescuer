@@ -6,7 +6,7 @@ import ExportButton from "./Export";
 import Button from "@mui/material/Button";
 
 const buttonStyles = {
-  width: "12dvw",
+  width: "10dvw",
   height: "5dvh",
   display: "flex",
   flexDirection: "row",

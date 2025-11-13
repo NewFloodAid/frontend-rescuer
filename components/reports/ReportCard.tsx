@@ -44,12 +44,12 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         variant="outlined"
         sx={{
           width: "22dvw",
-          height: "45dvh",
-          border: `2.5px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}`,
+          height: "43dvh",
+          border: `2px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}`,
           borderRadius: "12px",
           fontFamily: "kanit",
           marginBottom: "1%",
-          padding: "1%",
+          padding: "0.5rem",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -64,11 +64,11 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             {/* Upper half: original report */}
             <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4 }}>
               <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
-                ผู้ร้อง {report.firstName} {report.lastName}
+                {report.firstName} {report.lastName}
                 <DateTimeDisplay dateTime={report.createdAt} />
               </div>
               <div
-                className="flex justify-end mb-[2%] text-[2.5vmin] font-semibold"
+                className="flex justify-end mb-[1%] text-[2vmin] font-semibold"
                 style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
               >
                 {StatusMappingToTH[report?.reportStatus?.status]}
@@ -81,7 +81,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                       assistance.quantity > 0 ? (
                         <div className="mb-4" key={assistance.assistanceType.id}>
                           <div className="font-semibold">
-                            {assistance.assistanceType.name}: {assistance.quantity} {assistance.assistanceType.unit}
+                            {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
                             <div className="text-[1.5xvmin] mt-1">{report.additionalDetail}</div>
@@ -112,7 +112,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             {/* Lower half: afterAdditionalDetail and AFTER images */}
             <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
-                <span className="font-bold">FEEDBACK</span>
+                <span className="font-semibold">FEEDBACK</span>
                 <DateTimeDisplay dateTime={report.updatedAt} />
               </div>
               <div className="flex justify-between items-start">
@@ -148,11 +148,11 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
               <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
-                ผู้ร้อง {report.firstName} {report.lastName}
+                {report.firstName} {report.lastName}
                 <DateTimeDisplay dateTime={report.createdAt} />
               </div>
               <div
-                className="flex justify-end mb-[2%] text-[2.5vmin] font-semibold"
+                className="flex justify-end mb-[1%] text-[2vmin] font-semibold"
                 style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
               >
                 {StatusMappingToTH[report?.reportStatus?.status]}
@@ -165,8 +165,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                       assistance.quantity > 0 ? (
                         <div className="mb-4" key={assistance.assistanceType.id}>
                           <div className="font-semibold">
-                            {assistance.assistanceType.name}: {assistance.quantity}{" "}
-                            {assistance.assistanceType.unit}
+                            {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
                           <div className="text-[2vmin] mt-1">{report.additionalDetail}</div>
