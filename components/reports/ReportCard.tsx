@@ -1,7 +1,7 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import { Grid2 } from "@mui/material";
+
 import { Report } from "@/types/report";
 import { DateTimeDisplay } from "../DateTimeDisplay";
 import {
@@ -84,7 +84,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                             {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
-                            <div className="text-[1.5xvmin] mt-1">{report.additionalDetail}</div>
+                          <div className="text-[1.5xvmin] mt-1">{report.additionalDetail}</div>
                         </div>
                       ) : null
                     )}
@@ -107,7 +107,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                   </div>
                 )}
               </div>
-              
+
             </div>
             {/* Lower half: afterAdditionalDetail and AFTER images */}
             <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>

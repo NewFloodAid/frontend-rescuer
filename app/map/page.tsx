@@ -14,7 +14,7 @@ import ReportCarousel from "@/components/search/ReportCarousel";
 export default function Map() {
   const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({});
   const queryReports = useQueryGetReports(queryParams);
-  const [searchInput, setSearchInput] = useState("");
+
   const router = useRouter();
 
   useEffect(() => {
@@ -26,13 +26,13 @@ export default function Map() {
   const reports = useMemo(() => queryReports.data || [], [queryReports.data]);
 
   const filteredReports = useMemo(() => {
-    const [firstName = "", lastName = ""] = searchInput.toLowerCase().split(" ");
+    const [firstName = "", lastName = ""] = "".split(" ");
     return reports.filter(
       (report) =>
         report.firstName.toLowerCase().includes(firstName) &&
         report.lastName.toLowerCase().includes(lastName)
     );
-  }, [searchInput, reports]);
+  }, [reports]);
 
   useEffect(() => {
     queryReports.refetch();

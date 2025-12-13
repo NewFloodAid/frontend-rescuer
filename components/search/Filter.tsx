@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQueryGetAssistanceTypes } from "@/api/assistanceType";
 import { useQueryGetSubdistrictFromProvince } from "@/api/subdistrict";
-import InputDropdown from "../InputDropdown";
+
 import Dropdown from "../Dropdown";
 import ToggleButtons from "../buttons/ToggleButtons";
 import Loader from "../Loader";
@@ -19,16 +19,10 @@ const FilterPart: React.FC<FilterPartProps> = ({
   const assistanceTypesQuery = useQueryGetAssistanceTypes();
   const subdistrictsQuery = useQueryGetSubdistrictFromProvince("เชียงใหม่");
 
-  const [selectedSubDistrict, setSelectedSubDistrict] = useState<string>("");
+
   const [selectedAssistanceType, setSelectedAssistanceType] = useState<string>("");
 
-  const handleSubDistrictChange = (
-    event: unknown,
-    subdistrict: string | null
-  ) => {
-    setSelectedSubDistrict(subdistrict || "");
-    onChangeReportsQueryParam("subdistrict", subdistrict);
-  };
+
 
   const handleAssistanceTypeChange = (event: unknown, type: string | null) => {
     setSelectedAssistanceType(type || "");
@@ -38,10 +32,10 @@ const FilterPart: React.FC<FilterPartProps> = ({
     onChangeReportsQueryParam("assistanceTypeId", selectedTypeId || null);
   };
 
-  if(assistanceTypesQuery.isPending || subdistrictsQuery.isPending ) {
+  if (assistanceTypesQuery.isPending || subdistrictsQuery.isPending) {
     return <Loader />;
   }
-  
+
   return (
     <>
       <div className="text-[2.5vmin] text-[#505050]">FILTER</div>
