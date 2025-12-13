@@ -105,24 +105,25 @@ export const useMutationDeleteReport = () => {
 };
 
 // Download a report PDF by ID
-export const downloadReportPdf = async (reportId: number) => {
+// Download a report Word document by ID
+export const downloadReportWord = async (reportId: number) => {
   try {
-    const response = await axiosClient.get(`/reports/${reportId}/pdf`, {
+    const response = await axiosClient.get(`/reports/${reportId}/word`, {
       headers: getAuthHeaders(),
       responseType: "blob",
     });
 
-    const blob = new Blob([response.data], { type: "application/pdf" });
+    const blob = new Blob([response.data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `report_${reportId}.pdf`;
+    a.download = `report_${reportId}.docx`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error("Failed to download PDF:", error);
+    console.error("Failed to download Word document:", error);
     throw error;
   }
 };

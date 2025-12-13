@@ -9,7 +9,7 @@ import UpdateReportButton from "../buttons/UpdateReportButton";
 import DeleteModal from "./DeleteModal";
 import ReportDetail from "./ReportDetail";
 import { DateDisplay, TimeDisplay } from "../DateTimeDisplay";
-import { downloadReportPdf } from "@/api/report";
+import { downloadReportWord } from "@/api/report";
 
 interface ReportModalProps {
   initialReport: Report;
@@ -23,11 +23,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
   onReportDetailModalClose,
 }) => {
 
-  const isReportStatusSuccess = (report:Report) => {
+  const isReportStatusSuccess = (report: Report) => {
     return report.reportStatus.status === ReportStatusEnum.enum.SUCCESS;
   };
 
-  const isReportStatusPendingOrProcessing = (report:Report) => {
+  const isReportStatusPendingOrProcessing = (report: Report) => {
     return (
       report.reportStatus.status === ReportStatusEnum.enum.PENDING ||
       report.reportStatus.status === ReportStatusEnum.enum.PROCESS
@@ -131,9 +131,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <div className="flex flex-row justify-between items-start my-[2%] px-[3%] gap-6">
                 {/* Solved Stamp instead of map */}
                 <div className="w-[33.33%]">
-                  <img 
-                    src="/images/solved.png" 
-                    alt="Solved" 
+                  <img
+                    src="/images/solved.png"
+                    alt="Solved"
                     style={{
                       width: "20dvw",
                       height: "auto",
@@ -194,11 +194,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   {report.reportStatus.status === ReportStatusEnum.enum.PROCESS && (
                     <img
                       src="/images/share-symbol.png"
-                      alt="Download PDF"
-                      title="Download PDF"
+                      alt="Download Word"
+                      title="Download Word"
                       className="cursor-pointer"
                       style={{ height: "4dvh", width: "auto" }}
-                      onClick={() => downloadReportPdf(report.id)}
+                      onClick={() => downloadReportWord(report.id)}
                     />
                   )}
                 </div>
