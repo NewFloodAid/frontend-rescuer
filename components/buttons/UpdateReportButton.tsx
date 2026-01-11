@@ -85,13 +85,13 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
     report.reportStatus.status === ReportStatusEnum.enum.PENDING
       ? "รับคำขอ"
       : report.reportStatus.status === ReportStatusEnum.enum.PROCESS
-      ? "ส่งต่อ"
-      : "อัพเดต";
+        ? "ส่งเรื่องไปแล้ว"
+        : "อัพเดต";
 
-  if(reportStatusQuery.isPending) {
+  if (reportStatusQuery.isPending) {
     return <Loader />;
   }
-      
+
   return (
     <Button
       variant="contained"

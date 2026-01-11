@@ -9,7 +9,7 @@ import UpdateReportButton from "../buttons/UpdateReportButton";
 import DeleteModal from "./DeleteModal";
 import ReportDetail from "./ReportDetail";
 import { DateDisplay, TimeDisplay } from "../DateTimeDisplay";
-import { downloadReportWord } from "@/api/report";
+import { useMutationDownloadReportWord, useMutationDownloadReportImages } from "@/api/report";
 
 interface ReportModalProps {
   initialReport: Report;
@@ -48,6 +48,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
   const closeConfirmDeleteReportModal = () => {
     setIsConfirmDeleteReportModalOpen(false);
   };
+
+  const { mutate: downloadWord } = useMutationDownloadReportWord();
+  const { mutate: downloadImages } = useMutationDownloadReportImages();
 
   // Filter images by phase
   const beforeImages = report.images.filter(img => img.phase === "BEFORE");
@@ -191,16 +194,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             <>
               <div className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
                 <div className="w-[20%] flex items-center pl-[1%]">
-                  {report.reportStatus.status === ReportStatusEnum.enum.PROCESS && (
-                    <img
-                      src="/images/share-symbol.png"
-                      alt="Download Word"
-                      title="Download Word"
-                      className="cursor-pointer"
-                      style={{ height: "4dvh", width: "auto" }}
-                      onClick={() => downloadReportWord(report.id)}
-                    />
-                  )}
+
                 </div>
                 <div className="w-[60%] flex flex-row justify-between">
                   <div>
@@ -258,9 +252,45 @@ const ReportModal: React.FC<ReportModalProps> = ({
             )}
             <Button
               variant="contained"
+
               sx={{
                 minWidth: "7dvw",
-                height: "5dvh",
+                height: "6dvh",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                backgroundColor: "#3B82F6",
+                "&:hover": { backgroundColor: "#2563EB" },
+                color: "white",
+                fontSize: "2vmin",
+                borderRadius: "10px",
+                fontFamily: "kanit",
+              }}
+              onClick={() => downloadWord(report)}
+            >
+              Download
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                minWidth: "7dvw",
+                height: "6dvh",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                backgroundColor: "#3B82F6",
+                "&:hover": { backgroundColor: "#2563EB" },
+                color: "white",
+                fontSize: "2vmin",
+                borderRadius: "10px",
+                fontFamily: "kanit",
+              }}
+              onClick={() => downloadImages(report)}
+            >
+              Download Images
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                minWidth: "7dvw",
+                height: "6dvh",
                 border: "1px solid rgba(0, 0, 0, 0.2)",
                 backgroundColor: "#FF0000",
                 "&:hover": { backgroundColor: "#CC0000" },

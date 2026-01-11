@@ -2,6 +2,7 @@ import axiosClient from "@/libs/axios";
 import { useToastContext } from "@/providers/Toast";
 import { GetReportsQueryParams, Report } from "@/types/report";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import JSZip from "jszip";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("jwtToken");
@@ -79,7 +80,7 @@ export const useMutationDeleteReport = () => {
 
   return useMutation({
     mutationFn: async (reportId: number) => {
-      const response = await axiosClient.delete(`/reports/${reportId}`,{
+      const response = await axiosClient.delete(`/reports/${reportId}`, {
         headers: getAuthHeaders(),
       });
       return response.data;
@@ -105,25 +106,132 @@ export const useMutationDeleteReport = () => {
 };
 
 // Download a report PDF by ID
-// Download a report Word document by ID
-export const downloadReportWord = async (reportId: number) => {
-  try {
-    const response = await axiosClient.get(`/reports/${reportId}/word`, {
-      headers: getAuthHeaders(),
-      responseType: "blob",
-    });
 
-    const blob = new Blob([response.data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `report_${reportId}.docx`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error("Failed to download Word document:", error);
-    throw error;
-  }
+// Download a report Word document by ID
+export const useMutationDownloadReportWord = () => {
+  const { showToast } = useToastContext();
+
+  return useMutation({
+    mutationFn: async (report: Report) => {
+      try {
+        const response = await axiosClient.get(`/reports/${report.id}/word`, {
+          headers: getAuthHeaders(),
+          responseType: "blob",
+        });
+        return { data: response.data, report };
+      } catch (error: any) {
+        // Try to read the blob error message if possible
+        if (error.response?.data instanceof Blob) {
+          const text = await error.response.data.text();
+          try {
+            const json = JSON.parse(text);
+            if (json.message) error.message = json.message;
+          } catch (e) {
+            // ignore if not json
+          }
+        }
+        throw error;
+      }
+    },
+    onSuccess: ({ data, report }) => {
+      const assistanceTypes = report.reportAssistances
+        .filter((a) => a.quantity > 0)
+        .map((a) => a.assistanceType.name)
+        .join("_");
+
+      const timestamp = new Date().getTime();
+      const filename = `${report.firstName} ${report.lastName}_${assistanceTypes || "report"}.docx`;
+
+      const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: "Download started",
+        life: 3000,
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to download Word document:", error);
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.message || "Failed to download Word document.",
+        life: 3000,
+      });
+    },
+  });
 };
+
+export const useMutationDownloadReportImages = () => {
+  const { showToast } = useToastContext();
+
+  return useMutation({
+    mutationFn: async (report: Report) => {
+      try {
+        const zip = new JSZip();
+        const promises = report.images.map(async (image) => {
+          try {
+            const response = await fetch(image.url);
+            if (!response.ok) throw new Error(`Failed to fetch image ${image.id}`);
+            const blob = await response.blob();
+
+            // Determine file extension
+            const type = blob.type.split('/')[1] || 'jpg';
+            const filename = `${image.phase.toLowerCase()}/image_${image.id}.${type}`;
+
+            zip.file(filename, blob);
+          } catch (err) {
+            console.error(`Failed to load image ${image.id}`, err);
+          }
+        });
+
+        await Promise.all(promises);
+
+        if (Object.keys(zip.files).length === 0) {
+          throw new Error("No images downloaded successfully.");
+        }
+
+        const content = await zip.generateAsync({ type: "blob" });
+        return { data: content, report };
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: ({ data, report }) => {
+      const url = window.URL.createObjectURL(data);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${report.firstName} ${report.lastName}_รูป.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: "Images download started",
+        life: 3000,
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to download images:", error);
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.message || "Failed to download images.",
+        life: 3000,
+      });
+    },
+  });
+};
+
