@@ -6,6 +6,7 @@ import { PrimeReactProvider } from "primereact/api";
 import { Toast } from "primereact/toast";
 import { useRef } from "react";
 import { APIProvider } from "@vis.gl/react-google-maps";
+import { TutorialProvider } from "@/providers/TutorialProvider";
 
 type ToastSeverity = "success" | "info" | "warn" | "error";
 
@@ -33,15 +34,17 @@ export default function RootLayout({
         <link rel="icon" href="/flood-aid.png" type="image/png" />
       </head>
       <body>
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
-        <PrimeReactProvider>
-          <QueryClientProvider client={queryClient}>
-            <ToastContextProvider>
-              {children}
-              </ToastContextProvider>
-          </QueryClientProvider>
-        </PrimeReactProvider>
-      </APIProvider>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
+          <PrimeReactProvider>
+            <QueryClientProvider client={queryClient}>
+              <TutorialProvider>
+                <ToastContextProvider>
+                  {children}
+                </ToastContextProvider>
+              </TutorialProvider>
+            </QueryClientProvider>
+          </PrimeReactProvider>
+        </APIProvider>
       </body>
     </html>
   );

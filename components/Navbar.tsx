@@ -28,6 +28,7 @@ const NavBar = () => {
     <div className="flex justify-between items-center bg-[#ff3388] h-[7dvh] rounded-bl-[38px] px-[2vw]">
       {/* Logo with Click Navigation */}
       <div
+        id="nav-logo"
         className="flex items-center font-andika text-[5vmin] text-white cursor-pointer select-none"
         onClick={() => router.push("/main")}
       >
@@ -37,6 +38,7 @@ const NavBar = () => {
       {/* Navigation Buttons */}
       <div className="flex items-center space-x-[1dvw]">
         <Button
+          id="nav-main-menu"
           variant="contained"
           sx={buttonStyles}
           onClick={() => router.push("/main")}
@@ -44,19 +46,22 @@ const NavBar = () => {
           <b className="font-andika">MAIN MENU</b>
         </Button>
         <Button
+          id="nav-map"
           variant="contained"
           sx={buttonStyles}
           onClick={() => router.push("/map")}
         >
           <b className="font-andika">MAP</b>
         </Button>
-        <ExportButton
-          text="EXPORT"
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-        />
+        <div id="nav-export">
+          <ExportButton
+            text="EXPORT"
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+          />
+        </div>
       </div>
     </div>
   );
