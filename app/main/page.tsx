@@ -97,12 +97,29 @@ export default function Main() {
   const reports = useMemo(() => queryReports.data || [], [queryReports.data]);
 
   const filteredReports = useMemo(() => {
-    const [firstName = "", lastName = ""] = searchInput.toLowerCase().split(" ");
-    return reports.filter(
-      (report) =>
-        report.firstName.toLowerCase().includes(firstName) &&
-        report.lastName.toLowerCase().includes(lastName)
-    );
+    const searchLower = searchInput.toLowerCase().trim();
+
+    if (!searchLower) return reports; // Return all if empty search
+
+    return reports.filter((report) => {
+      // Search across all text fields
+      const searchableText = [
+        report.firstName,
+        report.lastName,
+        report.mainPhoneNumber,
+        report.reservePhoneNumber || "",
+        report.additionalDetail,
+        report.afterAdditionalDetail || "",
+        report.location?.subDistrict || "",
+        report.location?.district || "",
+        report.location?.province || "",
+        report.reportStatus?.status || "",
+        // Add assistance types
+        ...report.reportAssistances.map(a => a.assistanceType?.name || ""),
+      ].join(" ").toLowerCase();
+
+      return searchableText.includes(searchLower);
+    });
   }, [searchInput, reports]);
 
   useEffect(() => {

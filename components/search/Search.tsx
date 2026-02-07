@@ -35,7 +35,7 @@ const SearchPart: React.FC<SearchPartProps> = ({
 
   return (
     <div className="flex flex-row mb-[1%] items-center font-kanit">
-      <div className="text-[2.5vmin] text-[#505050] mr-[1%]">ค้นหารายชื่อ</div>
+      <div className="text-[2.5vmin] text-[#505050] mr-[1%]">ค้นหา</div>
       <Paper
         sx={{
           width: "40dvw",
