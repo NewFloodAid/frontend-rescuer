@@ -177,40 +177,38 @@ export const useMutationDownloadReportImages = () => {
   return useMutation({
     mutationFn: async (report: Report) => {
       try {
-        const zip = new JSZip();
-        const promises = report.images.map(async (image) => {
-          try {
-            const response = await fetch(image.url);
-            if (!response.ok) throw new Error(`Failed to fetch image ${image.id}`);
-            const blob = await response.blob();
-
-            // Determine file extension
-            const type = blob.type.split('/')[1] || 'jpg';
-            const filename = `${image.phase.toLowerCase()}/image_${image.id}.${type}`;
-
-            zip.file(filename, blob);
-          } catch (err) {
-            console.error(`Failed to load image ${image.id}`, err);
-          }
+        const response = await axiosClient.get(`/reports/${report.id}/word-with-images`, {
+          headers: getAuthHeaders(),
+          responseType: "blob",
         });
-
-        await Promise.all(promises);
-
-        if (Object.keys(zip.files).length === 0) {
-          throw new Error("No images downloaded successfully.");
+        return { data: response.data, report };
+      } catch (error: any) {
+        // Try to read the blob error message if possible
+        if (error.response?.data instanceof Blob) {
+          const text = await error.response.data.text();
+          try {
+            const json = JSON.parse(text);
+            if (json.message) error.message = json.message;
+          } catch (e) {
+            // ignore if not json
+          }
         }
-
-        const content = await zip.generateAsync({ type: "blob" });
-        return { data: content, report };
-      } catch (error) {
         throw error;
       }
     },
     onSuccess: ({ data, report }) => {
-      const url = window.URL.createObjectURL(data);
+      const assistanceTypes = report.reportAssistances
+        .filter((a) => a.quantity > 0)
+        .map((a) => a.assistanceType.name)
+        .join("_");
+
+      const filename = `${report.firstName} ${report.lastName}_${assistanceTypes || "report"}_รูป.docx`;
+
+      const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${report.firstName} ${report.lastName}_รูป.zip`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -219,16 +217,16 @@ export const useMutationDownloadReportImages = () => {
       showToast({
         severity: "success",
         summary: "Success",
-        detail: "Images download started",
+        detail: "Images document download started",
         life: 3000,
       });
     },
     onError: (error) => {
-      console.error("Failed to download images:", error);
+      console.error("Failed to download images document:", error);
       showToast({
         severity: "error",
         summary: "Error",
-        detail: error.message || "Failed to download images.",
+        detail: error.message || "Failed to download images document.",
         life: 3000,
       });
     },
