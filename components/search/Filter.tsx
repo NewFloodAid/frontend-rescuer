@@ -38,7 +38,7 @@ const FilterPart: React.FC<FilterPartProps> = ({
 
   return (
     <>
-      <div className="text-[2.5vmin] text-[#505050]">FILTER</div>
+      <div className="text-[2.5vmin] text-[#505050]">กรองข้อมูล</div>
       <Dropdown
         placeholder="ประเภท"
         value={selectedAssistanceType}

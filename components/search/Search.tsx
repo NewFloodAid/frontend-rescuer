@@ -56,9 +56,9 @@ const SearchPart: React.FC<SearchPartProps> = ({
           onChange={(e) => handleSearchChange(e, e.target.value)}
         />
       </Paper>
-      <div className="text-[2.5vmin] text-[#505050] mr-[1%]">FROM</div>
+      <div className="text-[2.5vmin] text-[#505050] mr-[1%]">ตั้งแต่วันที่</div>
       <DatePicker value={fromDate} onChange={handleFromDateChange} />
-      <div className="text-[2.5vmin] text-[#505050] mx-[1%]">TO</div>
+      <div className="text-[2.5vmin] text-[#505050] mx-[1%]">ถึงวันที่</div>
       <DatePicker value={toDate} onChange={handleToDateChange} />
     </div>
   );

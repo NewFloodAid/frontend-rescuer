@@ -14,7 +14,7 @@ interface ReportMapProps {
 }
 
 const mapStyle = {
-  width: "20dvw",
+  width: "100%",
   height: "auto",
   aspectRatio: "1 / 1",
   border: "1px solid rgba(0,0,0,0.5)",

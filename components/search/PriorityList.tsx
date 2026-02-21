@@ -85,7 +85,7 @@ const StatusList = ({ reports }: { reports: Report[] }) => {
   });
 
   return (
-    <div className="font-kanit">
+    <div className="font-kanit flex justify-center w-full">
       <Stack direction="column" sx={{ width: "15dvw" }} spacing={2}>
         <Priority
           pColor="#ffffffff"

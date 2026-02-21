@@ -14,7 +14,7 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
     <Card
       elevation={0}
       sx={{
-        width: "20dvw",
+        width: "100%",
         height: "auto",
         aspectRatio: "1 / 1",
         border: hasImages ? "none" : "1px solid rgba(0, 0, 0, 0.2)",

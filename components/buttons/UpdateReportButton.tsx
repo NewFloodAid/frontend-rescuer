@@ -5,6 +5,8 @@ import { ReportStatusEnum } from "@/types/report_status";
 import { useMutationUpdateReport } from "@/api/report";
 import { useQueryGetReportStatuses } from "@/api/reportStatus";
 import Loader from "../Loader";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 interface UpdateReportButtonProps {
   report: Report;
@@ -13,6 +15,7 @@ interface UpdateReportButtonProps {
 const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
   const reportStatusQuery = useQueryGetReportStatuses({ isUser: false });
   const mutationUpdateReport = useMutationUpdateReport();
+  const MySwal = withReactContent(Swal);
 
   const getStatusButtonStyle = (status: string) => {
     switch (status) {
@@ -70,15 +73,62 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
       return;
     }
 
-    try {
-      const updatedReport = {
-        ...report,
-        reportStatus: newReportStatus,
-      };
-      await mutationUpdateReport.mutateAsync({ report: updatedReport });
-    } catch (error) {
-      console.error("Failed to update report status", error);
+    if (report.reportStatus.status === ReportStatusEnum.enum.PENDING) {
+      try {
+        const updatedReport = {
+          ...report,
+          reportStatus: newReportStatus,
+        };
+        await mutationUpdateReport.mutateAsync({ report: updatedReport });
+      } catch (error) {
+        console.error("Failed to update report status", error);
+      }
+      return;
     }
+
+    const confirmTitle = 'ยืนยันการส่งเรื่อง';
+    const confirmText = 'กรุณาตรวจสอบว่าท่านได้ส่งรายงานให้กับหน่วยงานที่รับผิดชอบเรียบร้อยแล้ว';
+    const confirmColor = '#3B82F6';
+
+    MySwal.fire({
+      title: confirmTitle,
+      text: confirmText,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmColor,
+      cancelButtonColor: '#cccccc',
+      confirmButtonText: '<span style="color:white; font-family:kanit; font-size:2vmin;">ยืนยัน</span>',
+      cancelButtonText: '<span style="color:black; font-family:kanit; font-size:2vmin;">ยกเลิก</span>',
+      customClass: {
+        popup: 'font-kanit',
+        container: 'z-[9999]',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedReport = {
+          ...report,
+          reportStatus: newReportStatus,
+        };
+        mutationUpdateReport.mutateAsync({ report: updatedReport }).then(() => {
+          MySwal.fire({
+            title: 'อัปเดตสถานะสำเร็จ!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            customClass: { popup: 'font-kanit', container: 'z-[9999]' }
+          });
+        }).catch((error) => {
+          console.error("Failed to update report status", error);
+          MySwal.fire({
+            title: 'เกิดข้อผิดพลาด!',
+            text: 'ไม่สามารถอัปเดตสถานะได้',
+            icon: 'error',
+            confirmButtonColor: '#FF0000',
+            customClass: { popup: 'font-kanit', container: 'z-[9999]' }
+          });
+        });
+      }
+    });
   };
 
   const reportStatusLabel =

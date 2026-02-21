@@ -52,10 +52,19 @@ const mapTutorialSteps: DriveStep[] = [
     },
   },
   {
-    element: "#tutorial-map-sidebar",
+    element: "#tutorial-map-status",
     popover: {
       title: "สถิติ",
-      description: "ดูสรุปสถิติสถานะและรายงาน",
+      description: "ดูสรุปสถิติสถานะของรายการแจ้งเหตุทั้งหมด",
+      side: "left",
+      align: "start",
+    },
+  },
+  {
+    element: "#tutorial-map-carousel",
+    popover: {
+      title: "รายงาน",
+      description: "ดูรายการแจ้งเหตุย่อและเลื่อนดูรายการอื่นๆ ได้ในส่วนนี้",
       side: "left",
       align: "start",
     },
@@ -128,9 +137,13 @@ export default function Map() {
           <div id="tutorial-map-view" className="w-3/4">
             <MainMap reports={filteredReports} />
           </div>
-          <div id="tutorial-map-sidebar" className="flex flex-col items-center w-1/4 gap-10">
-            <StatusList reports={filteredReports} />
-            <ReportCarousel reports={filteredReports} />
+          <div className="flex flex-col items-center w-1/4 gap-10">
+            <div id="tutorial-map-status" className="w-full">
+              <StatusList reports={filteredReports} />
+            </div>
+            <div id="tutorial-map-carousel" className="w-full">
+              <ReportCarousel reports={filteredReports} />
+            </div>
           </div>
         </div>
       </div>

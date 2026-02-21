@@ -167,7 +167,7 @@ export default function Main() {
             title="Start Tutorial"
           >
             <HelpOutlineIcon />
-            <span>Help</span>
+            <span>วิธีใช้</span>
           </button>
         </div>
       </div>

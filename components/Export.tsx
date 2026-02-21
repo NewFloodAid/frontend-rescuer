@@ -9,8 +9,10 @@ import DatePicker from "./DatePicker"; // Import DatePicker component
 import DownloadIcon from "@mui/icons-material/Download";
 
 const buttonStyles = {
-  width: "12dvw",
+  width: "auto",
+  minWidth: "max-content",
   height: "5dvh",
+  padding: "0 1.5dvw",
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -18,6 +20,8 @@ const buttonStyles = {
   fontFamily: "kanit",
   backgroundColor: "white",
   color: "#8c0000",
+  whiteSpace: "nowrap",
+  borderRadius: "10px",
 };
 
 const modalStyles = {
@@ -75,8 +79,9 @@ const ExportButton = ({
 
   return (
     <>
-      <Button variant="contained" sx={buttonStyles} onClick={handleOpen}>
+      <Button variant="contained" sx={{ ...buttonStyles, gap: "0.5vw" }} onClick={handleOpen}>
         <b className="font-andika">{text}</b>
+        <img src="/images/excel-logo.png" alt="Excel" className="w-[6vmin] h-auto object-contain" />
       </Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyles}>
@@ -89,11 +94,11 @@ const ExportButton = ({
           <div className="flex justify-center">
             <div className="flex flex-col space-y-[5%]">
               <div className="flex flex-col">
-                <div className="text-[2.5vmin] text-[#505050]">FROM</div>
+                <div className="text-[2.5vmin] text-[#505050]">ตั้งแต่วันที่</div>
                 <DatePicker value={startDate} onChange={setStartDate} />
               </div>
               <div className="flex flex-col">
-                <div className="text-[2.5vmin] text-[#505050]">TO</div>
+                <div className="text-[2.5vmin] text-[#505050]">ถึงวันที่</div>
                 <DatePicker value={endDate} onChange={setEndDate} />
               </div>
             </div>
@@ -111,7 +116,7 @@ const ExportButton = ({
               }}
               onClick={handleExport}
             >
-              {isLoading ? "Downloading..." : "Download"}
+              {isLoading ? "กำลังดาวน์โหลด..." : "ดาวน์โหลด"}
               <DownloadIcon />
             </Button>
             <Button
