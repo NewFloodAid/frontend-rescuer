@@ -112,7 +112,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             {/* Lower half: afterAdditionalDetail and AFTER images */}
             <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div className="flex flex-row justify-between items-center text-[2vmin] mb-[1%]">
-                <span className="font-semibold">FEEDBACK</span>
+                <span className="font-semibold">ข้อเสนอแนะ</span>
                 <DateTimeDisplay dateTime={report.updatedAt} />
               </div>
               <div className="flex justify-between items-start">

@@ -82,23 +82,6 @@ const getTutorialSteps = (status: string): DriveStep[] => {
     });
   }
 
-  if (status === ReportStatusEnum.enum.SUCCESS) {
-    steps.push({
-      element: "#tutorial-report-feedback",
-      popover: {
-        title: "ผลการดำเนินการ (FEEDBACK)",
-        description: "แสดงสรุปผลการปฏิบัติงาน จำนวนการช่วยเหลือ และรายละเอียดเพิ่มเติม",
-      }
-    });
-    steps.push({
-      element: "#tutorial-report-after-images",
-      popover: {
-        title: "รูปภาพหลังดำเนินการ",
-        description: "ภาพถ่ายหลังจากที่เจ้าหน้าที่ได้ดำเนินการช่วยเหลือเรียบร้อยแล้ว",
-      }
-    });
-  }
-
   return steps;
 };
 
@@ -136,7 +119,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
   }, [initialReport]);
 
   useEffect(() => {
-    if (isReportDetailModalOpen && report) {
+    if (isReportDetailModalOpen && report && !isReportStatusSuccess(report)) {
       const status = report.reportStatus.status;
       const seenKey = `tutorial_seen_report_${status}`;
       const seen = localStorage.getItem(seenKey);
@@ -193,145 +176,99 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <div className="relative flex items-start">
           <div className="w-[85vw] max-w-[1200px] max-h-[85vh] rounded-[10px] bg-white flex flex-col pb-[1%] overflow-y-auto shadow-xl">
             {isReportStatusSuccess(report) ? (
-              // Two-section layout for SUCCESS status
-              <>
-                {/* Upside Section - Original Report */}
-                <div id="tutorial-report-header" className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
-                  <div className="w-[20%]" />
-                  <div className="w-[60%] flex flex-row justify-between">
-                    <div>
-                      คำร้องขอของ: {report.firstName} {report.lastName}
-                    </div>
-                    <div>
-                      <DateDisplay dateTime={report.createdAt} />
-                    </div>
-                    <div>
-                      เวลา <TimeDisplay dateTime={report.createdAt} />
-                    </div>
+              // Unified Layout for SUCCESS status
+              <div className="flex flex-col w-full">
+                {/* Unified Header */}
+                <div id="tutorial-report-header" className="w-full h-[6dvh] shrink-0 bg-[#505050] border-b border-[#00000033] rounded-t-[10px] flex items-center px-[3%] text-white">
+                  <div className="flex-1 text-[2.5vmin] font-medium">
+                    คำร้องขอของ: {report.firstName} {report.lastName}
                   </div>
-                  <div className="w-[20%] flex justify-end pr-[1%] gap-[1vw]">
+                  <div className="flex justify-end gap-[1vw]">
                     <IconButton
-                      title="Tutorial"
-                      sx={{
-                        width: "4dvh",
-                        height: "4dvh",
-                      }}
-                      onClick={() => startTutorial(getTutorialSteps(report.reportStatus.status), `report_${report.reportStatus.status}`)}
-                    >
-                      <HelpOutlineIcon
-                        sx={{
-                          width: "4dvh",
-                          height: "auto",
-                          aspectRatio: "1 / 1",
-                          color: "#FFFFFF",
-                        }}
-                      />
-                    </IconButton>
-                    <IconButton
-                      sx={{
-                        width: "4dvh",
-                        height: "4dvh",
-                      }}
+                      sx={{ width: "4dvh", height: "4dvh" }}
                       onClick={onReportDetailModalClose}
                     >
-                      <CancelIcon
-                        sx={{
-                          width: "4dvh",
-                          height: "auto",
-                          aspectRatio: "1 / 1",
-                          color: "#FF0000",
-                        }}
-                      />
+                      <CancelIcon sx={{ width: "4dvh", height: "auto", aspectRatio: "1 / 1", color: "#FF0000" }} />
                     </IconButton>
                   </div>
                 </div>
 
-                <div className="flex flex-row justify-center items-start my-[2%] px-[2%] gap-[3%]">
-                  <div id="tutorial-report-map" className="w-[31%]">
-                    <ReportMap report={report} />
-                  </div>
-                  <div id="tutorial-report-detail" className="w-[31%]">
-                    <ReportDetail report={report} setReport={setReport} />
-                  </div>
-                  <div id="tutorial-report-images" className="w-[31%]">
-                    <ReportImages
-                      report={{
-                        ...report,
-                        images: beforeImages,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Downside Section - Feedback */}
-                <div className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white mt-[0%]">
-                  <div className="w-[20%]" />
-                  <div className="w-[60%] flex flex-row justify-between">
-                    <div>
-                      FEEDBACK
+                {/* Content Area */}
+                <div className="flex flex-col w-full px-[4%] py-[2%] gap-[3dvh]">
+                  {/* Before Section */}
+                  <div className="flex flex-col">
+                    <div className="flex justify-between items-end border-b-2 border-gray-200 pb-[1%] mb-[2%]">
+                      <span className="text-[2.2vmin] font-bold text-gray-800">ข้อมูลการแจ้งเหตุ (ก่อนดำเนินการ)</span>
+                      <span className="text-[1.8vmin] text-gray-500 font-medium tracking-wide">
+                        แจ้งเมื่อ: <DateDisplay dateTime={report.createdAt} /> เวลา <TimeDisplay dateTime={report.createdAt} />น.
+                      </span>
                     </div>
-                    <div>
-                      <DateDisplay dateTime={report.updatedAt || report.createdAt} />
-                    </div>
-                    <div>
-                      เวลา <TimeDisplay dateTime={report.updatedAt || report.createdAt} />
-                    </div>
-                  </div>
-                  <div className="w-[20%]" />
-                </div>
-
-                <div className="flex flex-row justify-center items-start my-[2%] px-[2%] gap-[3%]">
-                  {/* Solved Stamp instead of map */}
-                  <div className="w-[31%]">
-                    <img
-                      src="/images/solved.png"
-                      alt="Solved"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        aspectRatio: "1 / 1",
-                        objectFit: "contain",
-                        border: "1px solid rgba(0,0,0,0.5)",
-                        borderRadius: "10px",
-                        overflow: "hidden"
-                      }}
-                    />
-                  </div>
-                  <div id="tutorial-report-feedback" className="w-[31%]">
-                    {/* Custom Feedback Detail Component */}
-                    <div className="w-full h-auto aspect-square border border-black/50 rounded-[10px] shadow-inner overflow-y-auto">
-                      <div className="flex justify-center text-[2.5vmin] mt-[4%] mb-[2%] font-bold text-black">
-                        FEEDBACK
+                    <div className="flex flex-row justify-center items-start gap-[3%]">
+                      <div id="tutorial-report-map" className="w-[31%]">
+                        <ReportMap report={report} />
                       </div>
-                      <div className="px-[5%] text-[1.75vmin]">
-                        {report.reportAssistances.map((assistance) =>
-                          assistance.quantity > 0 ? (
-                            <div key={assistance.assistanceType.id} className="flex items-center mb-[2%]">
-                              <span>
-                                {assistance.assistanceType.name}: {assistance.quantity} งาน
-                              </span>
+                      <div id="tutorial-report-detail" className="w-[31%]">
+                        <ReportDetail report={report} setReport={setReport} />
+                      </div>
+                      <div id="tutorial-report-images" className="w-[31%]">
+                        <ReportImages report={{ ...report, images: beforeImages }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* After Section */}
+                  <div className="flex flex-col">
+                    <div className="flex justify-between items-end border-b-2 border-gray-200 pb-[1%] mb-[2%]">
+                      <span className="text-[2.2vmin] font-bold text-[#22C55E]">ผลการดำเนินการ</span>
+                      <span className="text-[1.8vmin] text-gray-500 font-medium tracking-wide">
+                        เสร็จสิ้นเมื่อ: <DateDisplay dateTime={report.updatedAt || report.createdAt} /> เวลา <TimeDisplay dateTime={report.updatedAt || report.createdAt} />น.
+                      </span>
+                    </div>
+                    <div className="flex flex-row justify-center items-start gap-[3%]">
+                      <div className="w-[31%] flex justify-center items-center">
+                        <img
+                          src="/images/solved.png"
+                          alt="Solved"
+                          className="w-full h-auto aspect-square object-contain"
+                        />
+                      </div>
+                      <div id="tutorial-report-feedback" className="w-[31%]">
+                        <div className="w-full h-auto aspect-square border border-black/50 rounded-[10px] shadow-inner overflow-y-auto">
+                          <div className="flex justify-center text-[2.5vmin] mt-[4%] mb-[2%] font-bold text-[#22C55E]">
+                            ข้อเสนอแนะ
+                          </div>
+                          <div className="px-[5%] text-[1.75vmin]">
+                            {report.reportAssistances.map((assistance) =>
+                              assistance.quantity > 0 ? (
+                                <div key={assistance.assistanceType.id} className="font-semibold flex items-center mb-[2%]">
+                                  <span>
+                                    {assistance.assistanceType.name}: {assistance.quantity} {assistance.assistanceType.unit}
+                                  </span>
+                                </div>
+                              ) : null
+                            )}
+                            <div className="mt-[2%] mb-[2%] text-[1.75vmin]">
+                              <div className="px-[3%] font-semibold">สถานที่เกิดเหตุ:</div>
+                              <div className="w-full px-[5%] font-normal break-words mt-[1%]">
+                                {report.location.address}
+                              </div>
                             </div>
-                          ) : null
-                        )}
-                        <div className="mt-[2%] mb-[4%] text-[1.75vmin]">
-                          <div className="px-[3%] font-semibold">รายละเอียดเพิ่มเติม:</div>
-                          <div className="w-full px-[5%] font-normal break-words">
-                            {report.afterAdditionalDetail || "-"}
+                            <div className="mt-[2%] mb-[4%] text-[1.75vmin]">
+                              <div className="px-[3%] font-semibold">รายละเอียดเพิ่มเติม:</div>
+                              <div className="w-full px-[5%] font-normal break-words mt-[1%]">
+                                {report.afterAdditionalDetail || "-"}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      <div id="tutorial-report-after-images" className="w-[31%]">
+                        <ReportImages report={{ ...report, images: afterImages }} />
+                      </div>
                     </div>
                   </div>
-                  <div id="tutorial-report-after-images" className="w-[33.33%]">
-                    <ReportImages
-                      report={{
-                        ...report,
-                        images: afterImages,
-                      }}
-                    />
-                  </div>
                 </div>
-              </>
+              </div>
             ) : (
               // Original single-section layout for other statuses
               <>
@@ -484,7 +421,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
           )}
         </div>
       </div>
-    </Modal>
+    </Modal >
   );
 };
 

@@ -51,9 +51,15 @@ const ReportDetail: React.FC<ReportDetailProps> = ({ report, setReport }) => {
             />
           ) : null
         )}
+        <div className="mt-[2%] mb-[2%] text-[1.75vmin]">
+          <div className="px-[3%] font-semibold">สถานที่เกิดเหตุ:</div>
+          <div className="w-full px-[5%] font-normal break-words mt-[1%]">
+            {report.location.address}
+          </div>
+        </div>
         <div className="mt-[2%] mb-[4%] text-[1.75vmin]">
           <div className="px-[3%] font-semibold">รายละเอียดเพิ่มเติม:</div>
-          <div className="w-full px-[5%] font-normal break-words">
+          <div className="w-full px-[5%] font-normal break-words mt-[1%]">
             {report.additionalDetail || "-"}
           </div>
         </div>
