@@ -10,23 +10,28 @@ type TutorialContextType = {
 
 const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
 
+const baseDriverConfig = {
+  showProgress: true,
+  animate: true,
+  nextBtnText: 'ถัดไป',
+  prevBtnText: 'ย้อนกลับ',
+  doneBtnText: 'เสร็จสิ้น',
+};
+
 export const TutorialProvider = ({ children }: { children: React.ReactNode }) => {
   const driverObj = useRef<Driver | null>(null);
 
   useEffect(() => {
     driverObj.current = driver({
-      showProgress: true,
-      animate: true,
+      ...baseDriverConfig,
       steps: [],
-      nextBtnText: 'ถัดไป',
-      prevBtnText: 'ย้อนกลับ',
-      doneBtnText: 'เสร็จสิ้น',
     });
   }, []);
 
   const startTutorial = (steps: DriveStep[], key: string) => {
     if (driverObj.current) {
       driverObj.current.setConfig({
+        ...baseDriverConfig,
         steps,
         onDestroyed: () => {
           localStorage.setItem(`tutorial_seen_${key}`, "true");
