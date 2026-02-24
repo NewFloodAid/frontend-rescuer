@@ -179,11 +179,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
               // Unified Layout for SUCCESS status
               <div className="flex flex-col w-full">
                 {/* Unified Header */}
-                <div id="tutorial-report-header" className="w-full h-[6dvh] shrink-0 bg-[#505050] border-b border-[#00000033] rounded-t-[10px] flex items-center px-[3%] text-white">
-                  <div className="flex-1 text-[2.5vmin] font-medium">
+                <div id="tutorial-report-header" className="w-full min-h-[6dvh] py-3 md:py-0 shrink-0 bg-[#505050] border-b border-[#00000033] rounded-t-[10px] flex flex-col md:flex-row items-center px-[3%] text-white relative">
+                  <div className="flex-1 text-[22px] md:text-[2.5vmin] font-bold md:font-medium text-center md:text-left mt-6 md:mt-0">
                     คำร้องขอของ: {report.firstName} {report.lastName}
                   </div>
-                  <div className="flex justify-end gap-[1vw]">
+                  <div className="absolute top-2 right-2 md:relative md:top-auto md:right-auto flex justify-end gap-[1vw]">
                     <IconButton
                       sx={{ width: "4dvh", height: "4dvh" }}
                       onClick={onReportDetailModalClose}
@@ -198,19 +198,19 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   {/* Before Section */}
                   <div className="flex flex-col">
                     <div className="flex justify-between items-end border-b-2 border-gray-200 pb-[1%] mb-[2%]">
-                      <span className="text-[2.2vmin] font-bold text-gray-800">ข้อมูลการแจ้งเหตุ (ก่อนดำเนินการ)</span>
-                      <span className="text-[1.8vmin] text-gray-500 font-medium tracking-wide">
+                      <span className="text-[16px] md:text-[2.2vmin] font-bold text-gray-800">ข้อมูลการแจ้งเหตุ (ก่อนดำเนินการ)</span>
+                      <span className="text-[13px] md:text-[1.8vmin] text-gray-500 font-medium tracking-wide">
                         แจ้งเมื่อ: <DateDisplay dateTime={report.createdAt} /> เวลา <TimeDisplay dateTime={report.createdAt} />น.
                       </span>
                     </div>
-                    <div className="flex flex-row justify-center items-start gap-[3%]">
-                      <div id="tutorial-report-map" className="w-[31%]">
+                    <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-[3%] w-full">
+                      <div id="tutorial-report-map" className="w-full md:w-[31%]">
                         <ReportMap report={report} />
                       </div>
-                      <div id="tutorial-report-detail" className="w-[31%]">
+                      <div id="tutorial-report-detail" className="w-full md:w-[31%]">
                         <ReportDetail report={report} setReport={setReport} />
                       </div>
-                      <div id="tutorial-report-images" className="w-[31%]">
+                      <div id="tutorial-report-images" className="w-full md:w-[31%]">
                         <ReportImages report={{ ...report, images: beforeImages }} />
                       </div>
                     </div>
@@ -219,25 +219,25 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   {/* After Section */}
                   <div className="flex flex-col">
                     <div className="flex justify-between items-end border-b-2 border-gray-200 pb-[1%] mb-[2%]">
-                      <span className="text-[2.2vmin] font-bold text-[#22C55E]">ผลการดำเนินการ</span>
-                      <span className="text-[1.8vmin] text-gray-500 font-medium tracking-wide">
+                      <span className="text-[16px] md:text-[2.2vmin] font-bold text-[#22C55E]">ผลการดำเนินการ</span>
+                      <span className="text-[13px] md:text-[1.8vmin] text-gray-500 font-medium tracking-wide">
                         เสร็จสิ้นเมื่อ: <DateDisplay dateTime={report.updatedAt || report.createdAt} /> เวลา <TimeDisplay dateTime={report.updatedAt || report.createdAt} />น.
                       </span>
                     </div>
-                    <div className="flex flex-row justify-center items-start gap-[3%]">
-                      <div className="w-[31%] flex justify-center items-center">
+                    <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-[3%] w-full">
+                      <div className="w-full md:w-[31%] flex justify-center items-center">
                         <img
                           src="/images/solved.png"
                           alt="Solved"
                           className="w-full h-auto aspect-square object-contain"
                         />
                       </div>
-                      <div id="tutorial-report-feedback" className="w-[31%]">
+                      <div id="tutorial-report-feedback" className="w-full md:w-[31%]">
                         <div className="w-full h-auto aspect-square border border-black/50 rounded-[10px] shadow-inner overflow-y-auto">
-                          <div className="flex justify-center text-[2.5vmin] mt-[4%] mb-[2%] font-bold text-[#22C55E]">
+                          <div className="flex justify-center text-[18px] md:text-[2.5vmin] mt-[4%] mb-[2%] font-bold text-[#22C55E]">
                             ข้อเสนอแนะ
                           </div>
-                          <div className="px-[5%] text-[1.75vmin]">
+                          <div className="px-[5%] text-[13px] md:text-[1.75vmin]">
                             {report.reportAssistances.map((assistance) =>
                               assistance.quantity > 0 ? (
                                 <div key={assistance.assistanceType.id} className="font-semibold flex items-center mb-[2%]">
@@ -247,13 +247,13 @@ const ReportModal: React.FC<ReportModalProps> = ({
                                 </div>
                               ) : null
                             )}
-                            <div className="mt-[2%] mb-[2%] text-[1.75vmin]">
+                            <div className="mt-[2%] mb-[2%] text-[13px] md:text-[1.75vmin]">
                               <div className="px-[3%] font-semibold">สถานที่เกิดเหตุ:</div>
                               <div className="w-full px-[5%] font-normal break-words mt-[1%]">
                                 {report.location.address}
                               </div>
                             </div>
-                            <div className="mt-[2%] mb-[4%] text-[1.75vmin]">
+                            <div className="mt-[2%] mb-[4%] text-[13px] md:text-[1.75vmin]">
                               <div className="px-[3%] font-semibold">รายละเอียดเพิ่มเติม:</div>
                               <div className="w-full px-[5%] font-normal break-words mt-[1%]">
                                 {report.afterAdditionalDetail || "-"}
@@ -262,7 +262,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                           </div>
                         </div>
                       </div>
-                      <div id="tutorial-report-after-images" className="w-[31%]">
+                      <div id="tutorial-report-after-images" className="w-full md:w-[31%]">
                         <ReportImages report={{ ...report, images: afterImages }} />
                       </div>
                     </div>
@@ -272,39 +272,43 @@ const ReportModal: React.FC<ReportModalProps> = ({
             ) : (
               // Original single-section layout for other statuses
               <>
-                <div id="tutorial-report-header" className="w-full h-[5dvh] bg-[#505050] border border-[#00000033] rounded-[10px] flex items-center text-white">
-                  <div className="w-[20%] flex items-center pl-[1%]">
+                <div id="tutorial-report-header" className="w-full min-h-[5dvh] py-3 md:py-0 bg-[#505050] border border-[#00000033] rounded-[10px] flex flex-col md:flex-row items-center text-white relative px-2 md:px-0">
+                  <div className="hidden md:flex w-[20%] items-center pl-[1%]">
 
                   </div>
-                  <div className="w-[60%] flex flex-row justify-between">
-                    <div>
+                  <div className="w-full md:w-[60%] flex flex-col md:flex-row justify-between items-center text-[15px] md:text-[inherit] gap-1 md:gap-0 mt-6 md:mt-0">
+                    <div className="font-bold md:font-normal text-center leading-tight">
                       คำร้องขอของ: {report.firstName} {report.lastName}
                     </div>
-                    <div>
-                      <DateDisplay dateTime={report.createdAt} />
-                    </div>
-                    <div>
-                      เวลา <TimeDisplay dateTime={report.createdAt} />
+                    <div className="flex flex-row justify-center gap-2 text-[15px] md:text-[inherit] text-gray-300 md:text-white mt-1 md:mt-0">
+                      <div>
+                        <DateDisplay dateTime={report.createdAt} />
+                      </div>
+                      <div>
+                        เวลา <TimeDisplay dateTime={report.createdAt} />
+                      </div>
                     </div>
                   </div>
-                  <div className="w-[20%] flex justify-end pr-[1%] gap-[1vw]">
-                    <IconButton
-                      title="Tutorial"
-                      sx={{
-                        width: "4dvh",
-                        height: "4dvh",
-                      }}
-                      onClick={() => startTutorial(getTutorialSteps(report.reportStatus.status), `report_${report.reportStatus.status}`)}
-                    >
-                      <HelpOutlineIcon
+                  <div className="absolute top-2 right-2 flex justify-end gap-[1vw] md:relative md:top-auto md:right-auto md:w-[20%] md:pr-[1%]">
+                    <div className="hidden md:block">
+                      <IconButton
+                        title="Tutorial"
                         sx={{
                           width: "4dvh",
-                          height: "auto",
-                          aspectRatio: "1 / 1",
-                          color: "#FFFFFF",
+                          height: "4dvh",
                         }}
-                      />
-                    </IconButton>
+                        onClick={() => startTutorial(getTutorialSteps(report.reportStatus.status), `report_${report.reportStatus.status}`)}
+                      >
+                        <HelpOutlineIcon
+                          sx={{
+                            width: "4dvh",
+                            height: "auto",
+                            aspectRatio: "1 / 1",
+                            color: "#FFFFFF",
+                          }}
+                        />
+                      </IconButton>
+                    </div>
                     <IconButton
                       sx={{
                         width: "4dvh",
@@ -324,14 +328,14 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   </div>
                 </div>
 
-                <div className="flex flex-row justify-center items-start my-[2%] px-[2%] gap-[3%]">
-                  <div id="tutorial-report-map" className="w-[31%]">
+                <div className="flex flex-col md:flex-row justify-center items-center md:items-start my-[2%] px-[2%] gap-4 md:gap-[3%] w-full">
+                  <div id="tutorial-report-map" className="w-full md:w-[31%]">
                     <ReportMap report={report} />
                   </div>
-                  <div id="tutorial-report-detail" className="w-[31%]">
+                  <div id="tutorial-report-detail" className="w-full md:w-[31%]">
                     <ReportDetail report={report} setReport={setReport} />
                   </div>
-                  <div id="tutorial-report-images" className="w-[31%]">
+                  <div id="tutorial-report-images" className="w-full md:w-[31%]">
                     <ReportImages
                       report={{
                         ...report,
@@ -343,7 +347,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
               </>
             )}
 
-            <div className="flex justify-center w-full mt-[-1%] mb-[0%] space-x-6">
+            <div className="flex flex-wrap md:flex-nowrap justify-center w-full mt-[-1%] mb-[0%] gap-4 md:gap-0 md:space-x-6">
               {isReportStatusPendingOrProcessing(report) && (
                 <div id="tutorial-update-report">
                   <UpdateReportButton report={report} />
@@ -359,7 +363,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   backgroundColor: "#FF0000",
                   "&:hover": { backgroundColor: "#CC0000" },
                   color: "white",
-                  fontSize: "2vmin",
+                  fontSize: { xs: "14px", md: "2vmin" },
                   borderRadius: "10px",
                   fontFamily: "kanit",
                 }}
@@ -383,7 +387,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   backgroundColor: "#FF69B4", // Hot Pink
                   "&:hover": { backgroundColor: "#FF1493" }, // Deep Pink
                   color: "white",
-                  fontSize: "2vmin",
+                  fontSize: { xs: "14px", md: "2vmin" },
                   borderRadius: "0 10px 10px 0",
                   fontFamily: "kanit",
                   whiteSpace: "nowrap",
@@ -407,7 +411,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   backgroundColor: "#FF69B4", // Hot Pink
                   "&:hover": { backgroundColor: "#FF1493" }, // Deep Pink
                   color: "white",
-                  fontSize: "2vmin",
+                  fontSize: { xs: "14px", md: "2vmin" },
                   borderRadius: "0 10px 10px 0",
                   fontFamily: "kanit",
                   whiteSpace: "nowrap",

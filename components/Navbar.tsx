@@ -29,12 +29,12 @@ const NavBar = () => {
   const [endDate, setEndDate] = useState<string>("");
 
   return (
-    <div className="flex justify-between items-center bg-[#ff3388] h-[7dvh] rounded-bl-[38px] px-[2vw] w-full">
+    <div className="flex justify-center md:justify-between items-center bg-[#ff3388] h-[7dvh] rounded-bl-[38px] px-[2vw] w-full relative">
       {/* Left side: Logo */}
       <div className="flex items-center gap-[2dvw]">
         <div
           id="nav-logo"
-          className="flex items-center font-andika text-[5vmin] text-white cursor-pointer select-none"
+          className="flex items-center font-andika text-[36px] md:text-[5vmin] text-white cursor-pointer select-none"
           onClick={() => router.push("/main")}
         >
           ONSPOT
@@ -42,7 +42,7 @@ const NavBar = () => {
       </div>
 
       {/* Right side: Navigation Buttons */}
-      <div className="flex items-center space-x-[1dvw]">
+      <div className="hidden md:flex items-center space-x-[1dvw]">
         <Button
           id="nav-main-menu"
           variant="contained"

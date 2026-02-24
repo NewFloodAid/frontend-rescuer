@@ -147,11 +147,12 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
       variant="contained"
       sx={{
         ...getStatusButtonStyle(report.reportStatus.status),
-        minWidth: "7dvw",
-        height: "6dvh",
+        minWidth: { xs: "35vw", md: "7dvw" },
+        height: { xs: "6.5dvh", md: "6dvh" },
         border: "1px solid rgba(0, 0, 0, 0.2)",
         color: "#FFFFFF",
-        fontSize: "2vmin",
+        fontSize: { xs: "18px", md: "2vmin" },
+        fontWeight: { xs: "bold", md: "normal" },
         borderRadius: "10px",
         fontFamily: "kanit",
       }}

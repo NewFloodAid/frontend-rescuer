@@ -155,10 +155,11 @@ export default function Main() {
 
   return (
     <>
-      <div id="tutorial-navbar">
+      <div id="tutorial-navbar" className="w-full">
         <NavBar />
       </div>
-      <div className="mt-[0.75%] px-[3%]">
+
+      <div className="hidden md:block mt-[0.75%] px-[3%]">
         <div id="tutorial-filter" className="flex flex-row mb-[1%] items-center font-kanit gap-[2%]">
           <FilterPart onChangeReportsQueryParam={onChangeReportsQueryParam} />
           <button
@@ -173,20 +174,27 @@ export default function Main() {
       </div>
 
       <div className="mt-[1%] px-[3%]">
-        <div id="tutorial-search">
+        <div id="tutorial-search" className="hidden md:block">
           <SearchPart
             searchInput={searchInput}
             setSearchInput={setSearchInput}
             onChangeReportsQueryParam={onChangeReportsQueryParam}
           />
         </div>
-        <div id="tutorial-reports" className="flex flex-wrap gap-[1.5%] items-start mt-4">
+        <div id="tutorial-reports-desktop" className="hidden md:flex flex-wrap gap-[1.5%] items-start mt-4">
           {paginatedReports.map((report) => (
             <ReportCard report={report} key={report.id} />
           ))}
         </div>
+        <div id="tutorial-reports-mobile" className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 mt-4 pb-4 w-full" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+          {paginatedReports.map((report) => (
+            <div key={report.id} className="w-[85vw] shrink-0 snap-center flex justify-center">
+              <ReportCard report={report} />
+            </div>
+          ))}
+        </div>
         {paginatedReports.length > 0 && (
-          <Stack spacing={2} alignItems="center" sx={{ marginY: "2%" }}>
+          <Stack spacing={2} sx={{ marginY: "2%", display: { xs: "none", md: "flex" }, alignItems: "center" }}>
             <Pagination
               count={Math.ceil(filteredReports.length / REPORT_ITEM_PER_PAGE)}
               page={page}
