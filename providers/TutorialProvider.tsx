@@ -5,7 +5,8 @@ import { driver, Driver, DriveStep } from "driver.js";
 import "driver.js/dist/driver.css";
 
 type TutorialContextType = {
-  startTutorial: (steps: DriveStep[], key: string) => void;
+  startTutorial: (steps: DriveStep[], key: string, onEnd?: () => void) => void;
+  closeTutorial: () => void;
 };
 
 const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
@@ -28,22 +29,40 @@ export const TutorialProvider = ({ children }: { children: React.ReactNode }) =>
     });
   }, []);
 
-  const startTutorial = (steps: DriveStep[], key: string) => {
+  const startTutorial = (steps: DriveStep[], key: string, onEnd?: () => void) => {
     if (driverObj.current) {
+      let completedAll = false;
+
       driverObj.current.setConfig({
         ...baseDriverConfig,
         steps,
+        onDestroyStarted: () => {
+          // Check if the user is on the last step when the tutorial is ending
+          if (driverObj.current?.isLastStep()) {
+            completedAll = true;
+          }
+          driverObj.current?.destroy();
+        },
         onDestroyed: () => {
           localStorage.setItem(`tutorial_seen_${key}`, "true");
+          // Only trigger onEnd if the user completed all steps
+          if (completedAll) {
+            onEnd?.();
+          }
         }
       });
       driverObj.current.drive();
       localStorage.setItem(`tutorial_seen_${key}`, "true");
     }
   };
+  const closeTutorial = () => {
+    if (driverObj.current) {
+      driverObj.current.destroy();
+    }
+  };
 
   return (
-    <TutorialContext.Provider value={{ startTutorial }}>
+    <TutorialContext.Provider value={{ startTutorial, closeTutorial }}>
       {children}
     </TutorialContext.Provider>
   );

@@ -8,6 +8,7 @@ import ReportImages from "./ReportImages";
 import UpdateReportButton from "../buttons/UpdateReportButton";
 import ReportDetail from "./ReportDetail";
 import { DateDisplay, TimeDisplay } from "../DateTimeDisplay";
+import TimestampDropdown from "./TimestampDropdown";
 import { useMutationDownloadReportWord, useMutationDownloadReportImages, useMutationDeleteReport } from "@/api/report";
 
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -89,12 +90,16 @@ interface ReportModalProps {
   initialReport: Report;
   isReportDetailModalOpen: boolean;
   onReportDetailModalClose: () => void;
+  isMock?: boolean;
+  onMockUpdate?: () => void;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({
   initialReport,
   isReportDetailModalOpen,
   onReportDetailModalClose,
+  isMock,
+  onMockUpdate,
 }) => {
 
   const isReportStatusSuccess = (report: Report) => {
@@ -119,7 +124,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
   }, [initialReport]);
 
   useEffect(() => {
-    if (isReportDetailModalOpen && report && !isReportStatusSuccess(report)) {
+    if (!isMock && isReportDetailModalOpen && report && !isReportStatusSuccess(report)) {
       const status = report.reportStatus.status;
       const seenKey = `tutorial_seen_report_${status}`;
       const seen = localStorage.getItem(seenKey);
@@ -134,6 +139,17 @@ const ReportModal: React.FC<ReportModalProps> = ({
   }, [isReportDetailModalOpen, report, startTutorial]);
 
   const handleDeleteConfirm = () => {
+    if (isMock) {
+      MySwal.fire({
+        title: 'นี่คือโหมดทดลอง',
+        text: 'ในโหมดนี้ปุ่มลบจะไม่มีผลใดๆ',
+        icon: 'info',
+        confirmButtonColor: '#3B82F6',
+        customClass: { popup: 'font-kanit' }
+      });
+      return;
+    }
+
     MySwal.fire({
       title: 'ลบประวัติคำร้องขอ',
       text: "คุณต้องการลบรายงานนี้ออกจากระบบอย่างถาวรหรือไม่?",
@@ -174,7 +190,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
     <Modal open={isReportDetailModalOpen} onClose={onReportDetailModalClose}>
       <div className="flex h-screen w-screen items-center justify-center font-kanit p-4 outline-none">
         <div className="relative flex items-start">
-          <div className="w-[85vw] max-w-[1200px] max-h-[85vh] rounded-[10px] bg-white flex flex-col pb-[1%] overflow-y-auto shadow-xl">
+          <div id="report-modal-content" className="w-[85vw] max-w-[1200px] max-h-[85vh] rounded-[10px] bg-white flex flex-col pb-[1%] overflow-y-auto shadow-xl">
             {isReportStatusSuccess(report) ? (
               // Unified Layout for SUCCESS status
               <div className="flex flex-col w-full">
@@ -200,7 +216,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                     <div className="flex justify-between items-end border-b-2 border-gray-200 pb-[1%] mb-[2%]">
                       <span className="text-[16px] md:text-[2.2vmin] font-bold text-gray-800">ข้อมูลการแจ้งเหตุ (ก่อนดำเนินการ)</span>
                       <span className="text-[13px] md:text-[1.8vmin] text-gray-500 font-medium tracking-wide">
-                        แจ้งเมื่อ: <DateDisplay dateTime={report.createdAt} /> เวลา <TimeDisplay dateTime={report.createdAt} />น.
+                        <TimestampDropdown report={report} />
                       </span>
                     </div>
                     <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-[3%] w-full">
@@ -281,12 +297,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                       คำร้องขอของ: {report.firstName} {report.lastName}
                     </div>
                     <div className="flex flex-row justify-center gap-2 text-[15px] md:text-[inherit] text-gray-300 md:text-white mt-1 md:mt-0">
-                      <div>
-                        <DateDisplay dateTime={report.createdAt} />
-                      </div>
-                      <div>
-                        เวลา <TimeDisplay dateTime={report.createdAt} />
-                      </div>
+                      <TimestampDropdown report={report} />
                     </div>
                   </div>
                   <div className="absolute top-2 right-2 flex justify-end gap-[1vw] md:relative md:top-auto md:right-auto md:w-[20%] md:pr-[1%]">
@@ -350,7 +361,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
             <div className="flex flex-wrap md:flex-nowrap justify-center w-full mt-[-1%] mb-[0%] gap-4 md:gap-0 md:space-x-6">
               {isReportStatusPendingOrProcessing(report) && (
                 <div id="tutorial-update-report">
-                  <UpdateReportButton report={report} />
+                  <UpdateReportButton
+                    report={report}
+                    isMock={isMock}
+                    onMockUpdate={onMockUpdate}
+                  />
                 </div>
               )}
               <Button

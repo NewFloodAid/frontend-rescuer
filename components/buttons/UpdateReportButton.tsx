@@ -10,9 +10,11 @@ import withReactContent from 'sweetalert2-react-content';
 
 interface UpdateReportButtonProps {
   report: Report;
+  isMock?: boolean;
+  onMockUpdate?: () => void;
 }
 
-const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
+const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report, isMock, onMockUpdate }) => {
   const reportStatusQuery = useQueryGetReportStatuses({ isUser: false });
   const mutationUpdateReport = useMutationUpdateReport();
   const MySwal = withReactContent(Swal);
@@ -50,6 +52,11 @@ const UpdateReportButton: React.FC<UpdateReportButtonProps> = ({ report }) => {
   const handleUpdateReport = async () => {
     if (reportStatusQuery.isLoading || !reportStatusQuery.data) {
       console.error("Report statuses are still loading");
+      return;
+    }
+
+    if (isMock && onMockUpdate) {
+      onMockUpdate();
       return;
     }
 

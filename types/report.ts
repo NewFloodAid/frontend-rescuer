@@ -29,6 +29,8 @@ export const ReportSchema = z.object({
   afterAdditionalDetail: z.string().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
+  processedAt: z.string().datetime().nullable().optional(),
+  sentAt: z.string().datetime().nullable().optional(),
   reportAssistances: z.array(ReportAssistanceSchema),
   images: z.array(ImageSchema),
 });
