@@ -125,8 +125,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         {report.reportStatus?.status === "SUCCESS" ? (
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             {/* Upper half: original report */}
-            <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4 }}>
-              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%]">
+            <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4, display: "flex", flexDirection: "column" }}>
+              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
                 {report.firstName} {report.lastName}
                 <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
               </div>
@@ -164,6 +164,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                         sx={{
                           width: { xs: "22vw", sm: "18vw", md: "12.5vmin" },
                           height: "auto",
+                          maxHeight: { xs: "none", md: "11vh" },
                           aspectRatio: "1 / 1",
                           objectFit: "cover",
                           borderRadius: "10px",
@@ -177,8 +178,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
 
             </div>
             {/* Lower half: afterAdditionalDetail and AFTER images */}
-            <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%]">
+            <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column" }}>
+              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
                 <span className="font-semibold">ข้อเสนอแนะ</span>
                 <DateTimeDisplay dateTime={report.updatedAt} />
               </div>
@@ -198,6 +199,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                         sx={{
                           width: { xs: "22vw", sm: "18vw", md: "12.5vmin" },
                           height: "auto",
+                          maxHeight: { xs: "none", md: "11vh" },
                           aspectRatio: "1 / 1",
                           objectFit: "cover",
                           borderRadius: "10px",
@@ -218,7 +220,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         ) : (
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%]">
+              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
                 {report.firstName} {report.lastName}
                 <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
               </div>
@@ -256,6 +258,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                         sx={{
                           width: { xs: "22vw", sm: "18vw", md: "12.5vmin" },
                           height: "auto",
+                          maxHeight: { xs: "none", md: "11vh" },
                           aspectRatio: "1 / 1",
                           objectFit: "cover",
                           borderRadius: "10px",
