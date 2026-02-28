@@ -18,7 +18,7 @@ function getTimestampEntries(report: Report): TimestampEntry[] {
     const status = report.reportStatus.status;
     const entries: TimestampEntry[] = [];
 
-    entries.push({ label: "แจ้งเมื่อ", dateTime: report.createdAt });
+    entries.push({ label: "แจ้งเมื่อ", dateTime: report.updatedAt || report.createdAt });
 
     if (
         status === ReportStatusEnum.enum.PROCESS ||
@@ -35,7 +35,7 @@ function getTimestampEntries(report: Report): TimestampEntry[] {
         status === ReportStatusEnum.enum.SUCCESS
     ) {
         if (report.sentAt) {
-            entries.push({ label: "ส่งเมื่อ", dateTime: report.sentAt });
+            entries.push({ label: "ส่งเรื่องไปเมื่อ", dateTime: report.sentAt });
         }
     }
 
@@ -60,7 +60,7 @@ function getCurrentTimestamp(report: Report): TimestampEntry {
             };
         case ReportStatusEnum.enum.SENT:
             return {
-                label: "ส่งเมื่อ",
+                label: "ส่งเรื่องไปเมื่อ",
                 dateTime: report.sentAt || report.createdAt,
             };
         case ReportStatusEnum.enum.SUCCESS:
@@ -72,7 +72,7 @@ function getCurrentTimestamp(report: Report): TimestampEntry {
         default:
             return {
                 label: "แจ้งเมื่อ",
-                dateTime: report.createdAt,
+                dateTime: report.updatedAt || report.createdAt,
             };
     }
 }

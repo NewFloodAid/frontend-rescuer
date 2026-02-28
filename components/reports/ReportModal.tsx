@@ -236,9 +236,6 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   <div className="flex flex-col">
                     <div className="flex justify-between items-end border-b-2 border-gray-200 pb-[1%] mb-[2%]">
                       <span className="text-[16px] md:text-[2.2vmin] font-bold text-[#22C55E]">ผลการดำเนินการ</span>
-                      <span className="text-[13px] md:text-[1.8vmin] text-gray-500 font-medium tracking-wide">
-                        เสร็จสิ้นเมื่อ: <DateDisplay dateTime={report.updatedAt || report.createdAt} /> เวลา <TimeDisplay dateTime={report.updatedAt || report.createdAt} />น.
-                      </span>
                     </div>
                     <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-[3%] w-full">
                       <div className="w-full md:w-[31%] flex justify-center items-center">
