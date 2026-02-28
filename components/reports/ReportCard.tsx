@@ -128,7 +128,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4 }}>
               <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%]">
                 {report.firstName} {report.lastName}
-                <DateTimeDisplay dateTime={report.createdAt} />
+                <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
               </div>
               <div
                 className="flex justify-end mb-[1%] text-[18px] md:text-[2vmin] font-semibold"
@@ -136,8 +136,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               >
                 {StatusMappingToTH[report?.reportStatus?.status]}
               </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 w-full">
-                <div className="text-[18px] md:text-[2vmin]">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
+                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2">
                   {report.reportAssistances
                     .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
                     .map((assistance) =>
@@ -154,8 +154,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 </div>
                 {/* Show BEFORE images only in upper half */}
                 {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
-                  <div className="flex flex-row md:block gap-2 w-full md:w-auto justify-start flex-wrap mt-2 md:mt-0">
-                    {report.images.filter(img => img.phase === "BEFORE").slice(0, 4).map((img, idx) => (
+                  <div className="shrink-0 flex items-start justify-end">
+                    {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
                       <CardMedia
                         key={idx}
                         component="img"
@@ -182,14 +182,14 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 <span className="font-semibold">ข้อเสนอแนะ</span>
                 <DateTimeDisplay dateTime={report.updatedAt} />
               </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 w-full">
-                <div className="text-[18px] md:text-[2vmin]">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
+                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2">
                   {report.afterAdditionalDetail || ""}
                 </div>
                 {/* Show AFTER images only in lower half */}
                 {report.images.filter(img => img.phase === "AFTER").length > 0 && (
-                  <div className="flex flex-row md:block gap-2 w-full md:w-auto justify-start flex-wrap mt-2 md:mt-0">
-                    {report.images.filter(img => img.phase === "AFTER").slice(0, 4).map((img, idx) => (
+                  <div className="shrink-0 flex items-start justify-end">
+                    {report.images.filter(img => img.phase === "AFTER").slice(0, 1).map((img, idx) => (
                       <CardMedia
                         key={idx}
                         component="img"
@@ -220,7 +220,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
               <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%]">
                 {report.firstName} {report.lastName}
-                <DateTimeDisplay dateTime={report.createdAt} />
+                <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
               </div>
               <div
                 className="flex justify-end mb-[1%] text-[18px] md:text-[2vmin] font-semibold"
@@ -228,8 +228,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               >
                 {StatusMappingToTH[report?.reportStatus?.status]}
               </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 w-full">
-                <div className="text-[18px] md:text-[2vmin]">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
+                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2">
                   {report.reportAssistances
                     .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
                     .map((assistance) =>
@@ -246,8 +246,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 </div>
                 {/* Only show BEFORE images if not SUCCESS */}
                 {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
-                  <div className="flex flex-row md:block gap-2 w-full md:w-auto justify-start flex-wrap mt-2 md:mt-0">
-                    {report.images.filter(img => img.phase === "BEFORE").slice(0, 4).map((img, idx) => (
+                  <div className="shrink-0 flex items-start justify-end">
+                    {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
                       <CardMedia
                         key={idx}
                         component="img"
