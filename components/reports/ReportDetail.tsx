@@ -43,12 +43,13 @@ const ReportDetail: React.FC<ReportDetailProps> = ({ report, setReport }) => {
       <div className="px-[5%] text-[14px] md:text-[1.75vmin]">
         {assistances.map((assistance: ReportAssistance) =>
           assistance.quantity > 0 ? (
-            <ReportCheckbox
-              key={assistance.assistanceType.id}
-              reportStatus={report.reportStatus.status}
-              reportAssistance={assistance}
-              onCheckboxChange={handleCheckboxChange}
-            />
+            <div key={`detail-${assistance.assistanceType.id}`}>
+              <ReportCheckbox
+                reportStatus={report.reportStatus.status}
+                reportAssistance={assistance}
+                onCheckboxChange={handleCheckboxChange}
+              />
+            </div>
           ) : null
         )}
         <div className="mt-[2%] mb-[2%] text-[14px] md:text-[1.75vmin]">

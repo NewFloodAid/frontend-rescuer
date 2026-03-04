@@ -124,157 +124,156 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
       >
         {report.reportStatus?.status === "SUCCESS" ? (
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-            {/* Upper half: original report */}
-            <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
-              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
-                {report.firstName} {report.lastName}
-                <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
-              </div>
-              <div
-                className="flex justify-end mb-[1%] text-[18px] md:text-[2vmin] font-semibold"
-                style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
-              >
-                {StatusMappingToTH[report?.reportStatus?.status]}
-              </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
-                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2">
-                  {report.reportAssistances
-                    .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
-                    .map((assistance) =>
-                      assistance.quantity > 0 ? (
-                        <div className="mb-4" key={assistance.assistanceType.id}>
-                          <div className="font-semibold">
-                            {assistance.assistanceType.name}
-                          </div>
-                          {/* Always show additional detail */}
-                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-2">{report.additionalDetail}</div>
-                        </div>
-                      ) : null
-                    )}
-                </div>
-                {/* Show BEFORE images only in upper half */}
-                {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
-                  <div className="shrink-0 flex items-start justify-end">
-                    {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
-                      <CardMedia
-                        key={idx}
-                        component="img"
-                        image={img.url || "/images/bg.png"}
-                        alt="Report Image"
-                        sx={{
-                          width: { xs: "22vw", sm: "18vw", md: "12.5vmin" },
-                          height: "auto",
-                          maxHeight: { xs: "none", md: "11vh" },
-                          aspectRatio: "1 / 1",
-                          objectFit: "cover",
-                          borderRadius: "10px",
-                          marginBottom: { xs: 0, md: "8px" }
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
 
-            </div>
-            {/* Lower half: afterAdditionalDetail and AFTER images */}
-            <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
-              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
-                <span className="font-semibold">ข้อเสนอแนะ</span>
-                <DateTimeDisplay dateTime={report.updatedAt} />
+            {/* Top Heading */}
+            <div className="flex flex-row justify-between shrink-0 mb-3">
+              <div className="text-[18px] md:text-[2vmin] font-normal leading-tight">
+                คำร้องขอของ {report.firstName} {report.lastName}
               </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2 min-h-0">
-                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2 line-clamp-2 overflow-hidden">
-                  {report.afterAdditionalDetail || ""}
+              <div className="flex flex-col items-end shrink-0 pl-2">
+                <div className="flex gap-2 text-[16px] md:text-[1.8vmin] font-semibold text-black leading-tight">
+                  <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
                 </div>
-                {/* Show AFTER images only in lower half */}
+                <div
+                  className="font-bold text-[18px] md:text-[2vmin] mt-1"
+                  style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
+                >
+                  {StatusMappingToTH[report?.reportStatus?.status]}
+                </div>
+              </div>
+            </div>
+
+            {/* Top Body (Before Info) */}
+            <div className="flex flex-row justify-between items-start w-full">
+              <div className="flex flex-col flex-1 pr-2">
+                {report.reportAssistances
+                  .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
+                  .map((assistance) =>
+                    assistance.quantity > 0 ? (
+                      <div className="mb-2" key={`success-assist-${assistance.assistanceType.id}`}>
+                        <div className="font-bold text-[18px] md:text-[2vmin] leading-tight">
+                          {assistance.assistanceType.name}
+                        </div>
+                        <div className="text-[16px] md:text-[1.8vmin] text-gray-500 mt-1 line-clamp-3">
+                          {report.additionalDetail}
+                        </div>
+                      </div>
+                    ) : null
+                  )}
+              </div>
+              {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
+                <div className="w-[35%] shrink-0 pl-2">
+                  {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
+                    <CardMedia
+                      key={`success-before-img-${img.url || idx}`}
+                      component="img"
+                      image={img.url || "/images/bg.png"}
+                      sx={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "8px" }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Feedback Box */}
+            <div className="mt-4 p-3 rounded-[12px] flex flex-col shrink-0"
+              style={{ border: `2px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}` }}>
+              <div className="flex flex-row justify-between items-start mb-2">
+                <div className="font-bold text-black text-[15px] md:text-[1.8vmin] leading-tight uppercase">
+                  ข้อเสนอแนะ
+                </div>
+                <div className="text-[14px] md:text-[1.6vmin] font-semibold text-black leading-tight mt-0.5">
+                  <DateTimeDisplay dateTime={report.updatedAt} />
+                </div>
+              </div>
+              <div className="flex flex-row justify-between w-full">
+                <div className="flex flex-col flex-1 pr-2 text-[16px] md:text-[1.8vmin] text-gray-500 line-clamp-3">
+                  {report.afterAdditionalDetail || "-"}
+                </div>
                 {report.images.filter(img => img.phase === "AFTER").length > 0 && (
-                  <div className="shrink-0 flex items-start justify-end">
+                  <div className="w-[35%] shrink-0 pl-2">
                     {report.images.filter(img => img.phase === "AFTER").slice(0, 1).map((img, idx) => (
                       <CardMedia
-                        key={idx}
+                        key={`success-after-img-${img.url || idx}`}
                         component="img"
                         image={img.url || "/images/bg.png"}
-                        alt="After Image"
-                        sx={{
-                          width: { xs: "22vw", sm: "18vw", md: "12.5vmin" },
-                          height: "auto",
-                          maxHeight: { xs: "none", md: "11vh" },
-                          aspectRatio: "1 / 1",
-                          objectFit: "cover",
-                          borderRadius: "10px",
-                          marginBottom: { xs: 0, md: "8px" }
-                        }}
+                        sx={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "8px" }}
                       />
                     ))}
                   </div>
                 )}
               </div>
             </div>
-            {/* Always show phone numbers at the bottom */}
-            <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mt-auto shrink-0 pt-1">
+
+            {/* Footer */}
+            <div className="flex flex-row justify-between items-end text-[16px] md:text-[1.6vmin] mt-auto shrink-0 pt-3 text-black">
               <div>เบอร์โทร {report.mainPhoneNumber}</div>
               <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
             </div>
+
           </div>
         ) : (
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", minHeight: 0, overflow: "hidden" }}>
-              <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
-                {report.firstName} {report.lastName}
-                <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
+
+            {/* Top Heading */}
+            <div className="flex flex-row justify-between shrink-0 mb-3">
+              <div className="text-[18px] md:text-[2vmin] font-normal leading-tight">
+                คำร้องขอของ {report.firstName} {report.lastName}
               </div>
-              <div
-                className="flex justify-end mb-[1%] text-[18px] md:text-[2vmin] font-semibold"
-                style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
-              >
-                {StatusMappingToTH[report?.reportStatus?.status]}
-              </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
-                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2">
-                  {report.reportAssistances
-                    .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
-                    .map((assistance) =>
-                      assistance.quantity > 0 ? (
-                        <div className="mb-4" key={assistance.assistanceType.id}>
-                          <div className="font-semibold">
-                            {assistance.assistanceType.name}
-                          </div>
-                          {/* Always show additional detail */}
-                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-2">{report.additionalDetail}</div>
-                        </div>
-                      ) : null
-                    )}
+              <div className="flex flex-col items-end shrink-0 pl-2">
+                <div className="flex gap-2 text-[16px] md:text-[1.8vmin] font-semibold text-black leading-tight">
+                  <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
                 </div>
-                {/* Only show BEFORE images if not SUCCESS */}
-                {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
-                  <div className="shrink-0 flex items-start justify-end">
-                    {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
-                      <CardMedia
-                        key={idx}
-                        component="img"
-                        image={img.url || "/images/bg.png"}
-                        alt="Report Image"
-                        sx={{
-                          width: { xs: "22vw", sm: "18vw", md: "12.5vmin" },
-                          height: "auto",
-                          maxHeight: { xs: "none", md: "11vh" },
-                          aspectRatio: "1 / 1",
-                          objectFit: "cover",
-                          borderRadius: "10px",
-                          marginBottom: { xs: 0, md: "8px" }
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div
+                  className="font-bold text-[18px] md:text-[2vmin] mt-1"
+                  style={{ color: StatusMappingENGToColor[report?.reportStatus?.status] }}
+                >
+                  {StatusMappingToTH[report?.reportStatus?.status]}
+                </div>
               </div>
             </div>
-            {/* Always show phone numbers at the bottom */}
-            <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mt-auto shrink-0 pt-1">
+
+            {/* Top Body (Before Info) */}
+            <div className="flex flex-row justify-between items-start w-full">
+              <div className="flex flex-col flex-1 pr-2">
+                {report.reportAssistances
+                  .sort((a, b) => b.assistanceType.id - a.assistanceType.id)
+                  .map((assistance) =>
+                    assistance.quantity > 0 ? (
+                      <div className="mb-2" key={`pending-assist-${assistance.assistanceType.id}`}>
+                        <div className="font-bold text-[18px] md:text-[2vmin] leading-tight">
+                          {assistance.assistanceType.name}
+                        </div>
+                        <div className="text-[16px] md:text-[1.8vmin] text-gray-500 mt-1 line-clamp-3">
+                          {report.additionalDetail}
+                        </div>
+                      </div>
+                    ) : null
+                  )}
+              </div>
+              {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
+                <div className="w-[35%] shrink-0 pl-2">
+                  {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
+                    <CardMedia
+                      key={`pending-before-img-${img.url || idx}`}
+                      component="img"
+                      image={img.url || "/images/bg.png"}
+                      sx={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "8px" }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Empty space filler for non-success statuses to push footer down */}
+            <div className="flex-1" />
+
+            {/* Footer */}
+            <div className="flex flex-row justify-between items-end text-[16px] md:text-[1.6vmin] mt-auto shrink-0 pt-3 text-black">
               <div>เบอร์โทร {report.mainPhoneNumber}</div>
               <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
             </div>
+
           </div>
         )}
       </Card>
