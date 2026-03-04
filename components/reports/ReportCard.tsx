@@ -147,7 +147,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                             {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
-                          <div className="text-[18px] md:text-[2vmin] mt-1">{report.additionalDetail}</div>
+                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-3">{report.additionalDetail}</div>
                         </div>
                       ) : null
                     )}
@@ -184,7 +184,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 <DateTimeDisplay dateTime={report.updatedAt} />
               </div>
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
-                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2">
+                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2 line-clamp-3">
                   {report.afterAdditionalDetail || ""}
                 </div>
                 {/* Show AFTER images only in lower half */}
@@ -241,7 +241,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                             {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
-                          <div className="text-[18px] md:text-[2vmin] mt-1">{report.additionalDetail}</div>
+                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-3">{report.additionalDetail}</div>
                         </div>
                       ) : null
                     )}
