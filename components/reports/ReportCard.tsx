@@ -106,9 +106,9 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
       <Card
         variant="outlined"
         sx={{
-          width: { xs: "100%", md: "22dvw" },
-          height: { xs: "65vh", md: "43dvh" },
-          border: `2px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}`,
+          width: { xs: "100%", md: "22.2dvw" },
+          height: { xs: "65vh", md: "50dvh" },
+          border: `2.2px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}`,
           borderRadius: "12px",
           fontFamily: "kanit",
           marginBottom: "1%",
@@ -128,7 +128,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             {/* Top Heading */}
             <div className="flex flex-row justify-between shrink-0 mb-3">
               <div className="text-[18px] md:text-[2vmin] font-normal leading-tight">
-                คำร้องขอของ {report.firstName} {report.lastName}
+                {report.firstName} {report.lastName}
               </div>
               <div className="flex flex-col items-end shrink-0 pl-2">
                 <div className="flex gap-2 text-[16px] md:text-[1.8vmin] font-semibold text-black leading-tight">
@@ -218,7 +218,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             {/* Top Heading */}
             <div className="flex flex-row justify-between shrink-0 mb-3">
               <div className="text-[18px] md:text-[2vmin] font-normal leading-tight">
-                คำร้องขอของ {report.firstName} {report.lastName}
+                {report.firstName} {report.lastName}
               </div>
               <div className="flex flex-col items-end shrink-0 pl-2">
                 <div className="flex gap-2 text-[16px] md:text-[1.8vmin] font-semibold text-black leading-tight">
@@ -291,7 +291,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               {/* Unified Header */}
               <div className="w-full min-h-[6dvh] py-3 bg-[#505050] border-b border-[#00000033] flex flex-col items-center px-[3%] text-white">
                 <div className="text-[18px] font-bold text-center mt-2">
-                  คำร้องขอของ: {localReport.firstName} {localReport.lastName}
+                  {localReport.firstName} {localReport.lastName}
                 </div>
               </div>
 
@@ -376,7 +376,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <>
               <div className="w-full min-h-[5dvh] py-4 bg-[#505050] border border-[#00000033] flex flex-col items-center text-white px-4">
                 <div className="font-bold text-center text-[16px] leading-tight mt-2">
-                  คำร้องขอของ: {localReport.firstName} {localReport.lastName}
+                  {localReport.firstName} {localReport.lastName}
                 </div>
                 <div className="flex flex-row justify-center gap-2 text-[16px] text-gray-300 mt-2 mb-2">
                   <div>
