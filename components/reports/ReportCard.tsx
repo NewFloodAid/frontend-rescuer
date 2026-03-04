@@ -154,7 +154,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                         <div className="font-bold text-[18px] md:text-[2vmin] leading-tight">
                           {assistance.assistanceType.name}
                         </div>
-                        <div className="text-[16px] md:text-[1.8vmin] text-gray-500 mt-1 line-clamp-3">
+                        <div className="text-[16px] md:text-[1.8vmin] text-gray-500 mt-1 line-clamp-2">
                           {report.additionalDetail}
                         </div>
                       </div>
@@ -162,7 +162,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                   )}
               </div>
               {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
-                <div className="w-[35%] shrink-0 pl-2">
+                <div className="w-[25%] shrink-0 pl-2">
                   {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
                     <CardMedia
                       key={`success-before-img-${img.url || idx}`}
@@ -187,11 +187,11 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 </div>
               </div>
               <div className="flex flex-row justify-between w-full">
-                <div className="flex flex-col flex-1 pr-2 text-[16px] md:text-[1.8vmin] text-gray-500 line-clamp-3">
+                <div className="flex flex-col flex-1 pr-2 text-[16px] md:text-[1.8vmin] text-gray-500 line-clamp-2">
                   {report.afterAdditionalDetail || "-"}
                 </div>
                 {report.images.filter(img => img.phase === "AFTER").length > 0 && (
-                  <div className="w-[35%] shrink-0 pl-2">
+                  <div className="w-[25%] shrink-0 pl-2">
                     {report.images.filter(img => img.phase === "AFTER").slice(0, 1).map((img, idx) => (
                       <CardMedia
                         key={`success-after-img-${img.url || idx}`}
@@ -244,7 +244,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                         <div className="font-bold text-[18px] md:text-[2vmin] leading-tight">
                           {assistance.assistanceType.name}
                         </div>
-                        <div className="text-[16px] md:text-[1.8vmin] text-gray-500 mt-1 line-clamp-3">
+                        <div className="text-[16px] md:text-[1.8vmin] text-gray-500 mt-1 line-clamp-2">
                           {report.additionalDetail}
                         </div>
                       </div>
@@ -252,7 +252,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                   )}
               </div>
               {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
-                <div className="w-[35%] shrink-0 pl-2">
+                <div className="w-[25%] shrink-0 pl-2">
                   {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
                     <CardMedia
                       key={`pending-before-img-${img.url || idx}`}
