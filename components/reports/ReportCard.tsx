@@ -107,7 +107,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         variant="outlined"
         sx={{
           width: { xs: "100%", md: "22.2dvw" },
-          height: { xs: "65vh", md: "50dvh" },
+          height: { xs: "65vh", md: "48dvh" },
           border: `2.2px solid ${StatusMappingENGToColor[report?.reportStatus?.status]}`,
           borderRadius: "12px",
           fontFamily: "kanit",
