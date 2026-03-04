@@ -125,7 +125,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         {report.reportStatus?.status === "SUCCESS" ? (
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             {/* Upper half: original report */}
-            <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4, display: "flex", flexDirection: "column" }}>
+            <div style={{ flex: 1, borderBottom: "1px solid #00ac28ff", paddingBottom: 4, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
               <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
                 {report.firstName} {report.lastName}
                 <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
@@ -147,7 +147,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                             {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
-                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-3">{report.additionalDetail}</div>
+                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-2">{report.additionalDetail}</div>
                         </div>
                       ) : null
                     )}
@@ -178,13 +178,13 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
 
             </div>
             {/* Lower half: afterAdditionalDetail and AFTER images */}
-            <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column" }}>
+            <div style={{ flex: 1, paddingTop: 4, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
               <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
                 <span className="font-semibold">ข้อเสนอแนะ</span>
                 <DateTimeDisplay dateTime={report.updatedAt} />
               </div>
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2">
-                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2 line-clamp-3">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-2 w-full mt-2 min-h-0">
+                <div className="text-[18px] md:text-[2vmin] flex-1 pr-2 line-clamp-2 overflow-hidden">
                   {report.afterAdditionalDetail || ""}
                 </div>
                 {/* Show AFTER images only in lower half */}
@@ -212,14 +212,14 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               </div>
             </div>
             {/* Always show phone numbers at the bottom */}
-            <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mt-auto">
+            <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mt-auto shrink-0 pt-1">
               <div>เบอร์โทร {report.mainPhoneNumber}</div>
               <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
             </div>
           </div>
         ) : (
           <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", minHeight: 0, overflow: "hidden" }}>
               <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mb-[1%] shrink-0">
                 {report.firstName} {report.lastName}
                 <DateTimeDisplay dateTime={report.editedAt || report.createdAt} />
@@ -241,7 +241,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                             {assistance.assistanceType.name}
                           </div>
                           {/* Always show additional detail */}
-                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-3">{report.additionalDetail}</div>
+                          <div className="text-[18px] md:text-[2vmin] mt-1 line-clamp-2">{report.additionalDetail}</div>
                         </div>
                       ) : null
                     )}
@@ -271,7 +271,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               </div>
             </div>
             {/* Always show phone numbers at the bottom */}
-            <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mt-auto">
+            <div className="flex flex-row justify-between items-center text-[18px] md:text-[2vmin] mt-auto shrink-0 pt-1">
               <div>เบอร์โทร {report.mainPhoneNumber}</div>
               <div>เบอร์สำรอง {report.reservePhoneNumber}</div>
             </div>
