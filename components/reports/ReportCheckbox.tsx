@@ -13,8 +13,7 @@ const ReportCheckbox: React.FC<ReportCheckboxProps> = ({
 }) => {
   return (
     <div className="font-semibold flex items-center mb-[2%]">
-      {reportAssistance.assistanceType.name}: {reportAssistance.quantity}{" "}
-      {reportAssistance.assistanceType.unit}
+      {reportAssistance.assistanceType.name}
     </div>
   );
 };

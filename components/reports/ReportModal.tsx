@@ -255,7 +255,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                               assistance.quantity > 0 ? (
                                 <div key={assistance.assistanceType.id} className="font-semibold flex items-center mb-[2%]">
                                   <span>
-                                    {assistance.assistanceType.name}: {assistance.quantity} {assistance.assistanceType.unit}
+                                    {assistance.assistanceType.name}
                                   </span>
                                 </div>
                               ) : null
