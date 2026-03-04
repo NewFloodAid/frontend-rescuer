@@ -20,26 +20,26 @@ function Priority({
 }: Params) {
   const styles = {
     outerPaper: {
-      height: "5dvh",
+      height: "4.5dvh",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingLeft: "3%",
+      paddingLeft: "4%",
       border: "1px solid rgba(0, 0, 0, 0.2)",
       backgroundColor: outerBgColor,
-      borderRadius: "12px", // Added border radius
+      borderRadius: "10px",
     },
     innerPaper: {
-      height: "5dvh",
-      width: "7dvh",
+      height: "4dvh",
+      width: "5dvh",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      fontSize: "2.3vmin",
+      fontSize: "2vmin",
       fontWeight: "600",
       border: "1px solid rgba(0, 0, 0, 0.2)",
       color: cardTextColor,
-      borderRadius: "12px", // Added border radius
+      borderRadius: "10px",
     },
     leftSection: {
       display: "flex",
@@ -51,9 +51,9 @@ function Priority({
   return (
     <Paper elevation={8} sx={styles.outerPaper}>
       <div style={styles.leftSection}>
-        <Place sx={{ color: pColor, fontSize: "3vmin" }} />
+        <Place sx={{ color: pColor, fontSize: "2.5vmin" }} />
         <span
-          className="font-semibold text-[2.3vmin]"
+          className="font-semibold text-[2vmin]"
           style={{ color: pColor }}
         >
           {pName}
@@ -86,7 +86,7 @@ const StatusList = ({ reports }: { reports: Report[] }) => {
 
   return (
     <div className="font-kanit flex justify-center w-full">
-      <Stack direction="column" sx={{ width: "15dvw" }} spacing={2}>
+      <Stack direction="column" sx={{ width: "15dvw" }} spacing={1}>
         <Priority
           pColor="#ffffffff"
           pName="ทั้งหมด"
