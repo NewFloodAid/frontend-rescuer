@@ -11,6 +11,8 @@ import {
   useQueryGetAllAssistanceTypes,
 } from "@/api/assistanceType";
 import { AssistanceType } from "@/types/assistance_type";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const emptyPayload: AssistanceTypePayload = {
   name: "",
@@ -39,6 +41,7 @@ export default function AssistanceTypesPage() {
   const [createForm, setCreateForm] = useState<AssistanceTypePayload>(emptyPayload);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<AssistanceTypePayload>(emptyPayload);
+  const MySwal = withReactContent(Swal);
 
   const activeTypes = useMemo(
     () => (assistanceTypesQuery.data ?? []).filter((item) => item.isActive !== false),
@@ -104,12 +107,42 @@ export default function AssistanceTypesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const ok = window.confirm("ยืนยันการลบประเภทเรื่องนี้?");
-    if (!ok) {
+    const result = await MySwal.fire({
+      title: "ยืนยันการลบประเภทเรื่อง",
+      text: "คุณต้องการลบประเภทเรื่องนี้ออกจากระบบหรือไม่?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ลบ",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#EF4444",
+      cancelButtonColor: "#6B7280",
+      reverseButtons: true,
+      customClass: {
+        popup: "font-kanit rounded-2xl",
+        title: "font-kanit",
+        htmlContainer: "font-kanit",
+        confirmButton: "font-kanit",
+        cancelButton: "font-kanit",
+      },
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
     await deleteMutation.mutateAsync(id);
+
+    await MySwal.fire({
+      title: "ลบสำเร็จ",
+      icon: "success",
+      timer: 1400,
+      showConfirmButton: false,
+      customClass: {
+        popup: "font-kanit rounded-2xl",
+        title: "font-kanit",
+      },
+    });
+
     if (editingId === id) {
       cancelEdit();
     }
