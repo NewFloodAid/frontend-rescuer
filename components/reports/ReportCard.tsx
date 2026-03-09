@@ -316,7 +316,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                       <ReportMap report={localReport} />
                     </div>
                     <div className="w-full">
-                      <ReportDetail report={localReport} setReport={setLocalReport} />
+                      <ReportDetail report={localReport} />
                     </div>
                     <div className="w-full">
                       <ReportImages report={{ ...localReport, images: beforeImages }} />
@@ -401,7 +401,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                   <ReportMap report={localReport} />
                 </div>
                 <div className="w-full">
-                  <ReportDetail report={localReport} setReport={setLocalReport} />
+                  <ReportDetail report={localReport} />
                 </div>
                 <div className="w-full">
                   <ReportImages

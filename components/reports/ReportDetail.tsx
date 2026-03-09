@@ -1,66 +1,43 @@
-import { useState } from "react";
-import { ReportAssistance } from "@/types/report_assistance";
+﻿import { ReportAssistance } from "@/types/report_assistance";
 import ReportCheckbox from "./ReportCheckbox";
-import {
-  StatusMappingENGToColor,
-  StatusMappingToTH,
-} from "@/constants/report_status";
+import { StatusMappingENGToColor, StatusMappingToTH } from "@/constants/report_status";
 import { Report } from "@/types/report";
 
 interface ReportDetailProps {
   report: Report;
-  setReport: React.Dispatch<React.SetStateAction<Report>>;
 }
 
-const ReportDetail: React.FC<ReportDetailProps> = ({ report, setReport }) => {
-  const [assistances, setAssistances] = useState(report.reportAssistances);
-
-  const handleCheckboxChange = (id: number, isActive: boolean) => {
-    const updatedAssistances = assistances.map((assistance) =>
-      assistance.assistanceType.id === id
-        ? { ...assistance, isActive }
-        : assistance
-    );
-
-    setAssistances(updatedAssistances);
-
-    setReport((prevReport: Report) => ({
-      ...prevReport,
-      reportAssistances: updatedAssistances,
-    }));
-  };
+const ReportDetail: React.FC<ReportDetailProps> = ({ report }) => {
+  const selectedAssistances = report.reportAssistances.filter(
+    (assistance) => assistance.quantity > 0,
+  );
 
   return (
-    <div className="w-full h-auto aspect-square border border-black/50  rounded-[10px] shadow-inner overflow-y-auto">
+    <div className="h-auto w-full aspect-square overflow-y-auto rounded-[10px] border border-black/50 shadow-inner">
       <div
-        className="flex justify-center text-[15px] md:text-[2.5vmin] mt-[4%] mb-[2%] font-bold md:font-normal"
+        className="mt-[4%] mb-[2%] flex justify-center text-[15px] font-bold md:text-[2.5vmin] md:font-normal"
         style={{
           color: StatusMappingENGToColor[report?.reportStatus?.status],
         }}
       >
         {StatusMappingToTH[report?.reportStatus?.status]}
       </div>
+
       <div className="px-[5%] text-[14px] md:text-[1.75vmin]">
-        {assistances.map((assistance: ReportAssistance) =>
-          assistance.quantity > 0 ? (
-            <div key={`detail-${assistance.assistanceType.id}`}>
-              <ReportCheckbox
-                reportStatus={report.reportStatus.status}
-                reportAssistance={assistance}
-                onCheckboxChange={handleCheckboxChange}
-              />
-            </div>
-          ) : null
-        )}
+        {selectedAssistances.map((assistance: ReportAssistance) => (
+          <div key={`detail-${assistance.id}-${assistance.assistanceType.id}`}>
+            <ReportCheckbox reportAssistance={assistance} />
+          </div>
+        ))}
+
         <div className="mt-[2%] mb-[2%] text-[14px] md:text-[1.75vmin]">
           <div className="px-[3%] font-semibold">สถานที่เกิดเหตุ:</div>
-          <div className="w-full px-[5%] font-normal break-words mt-[1%]">
-            {report.location.address}
-          </div>
+          <div className="mt-[1%] w-full break-words px-[5%] font-normal">{report.location.address}</div>
         </div>
+
         <div className="mt-[2%] mb-[4%] text-[14px] md:text-[1.75vmin]">
           <div className="px-[3%] font-semibold">รายละเอียดเพิ่มเติม:</div>
-          <div className="w-full px-[5%] font-normal break-words mt-[1%]">
+          <div className="mt-[1%] w-full break-words px-[5%] font-normal">
             {report.additionalDetail || "-"}
           </div>
         </div>

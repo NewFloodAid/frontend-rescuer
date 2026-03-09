@@ -7,6 +7,7 @@ export const ReportAssistanceSchema = z.object({
     assistanceType: AssistanceTypeSchema,
     quantity: z.number(),
     isActive: z.boolean(),
+    extraDetail: z.string().nullable().optional(),
 });
 
 export type ReportAssistance = z.infer<typeof ReportAssistanceSchema>;

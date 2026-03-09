@@ -224,7 +224,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                         <ReportMap report={report} />
                       </div>
                       <div id="tutorial-report-detail" className="w-full md:w-[31%]">
-                        <ReportDetail report={report} setReport={setReport} />
+                        <ReportDetail report={report} />
                       </div>
                       <div id="tutorial-report-images" className="w-full md:w-[31%]">
                         <ReportImages report={{ ...report, images: beforeImages }} />
@@ -341,7 +341,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                     <ReportMap report={report} />
                   </div>
                   <div id="tutorial-report-detail" className="w-full md:w-[31%]">
-                    <ReportDetail report={report} setReport={setReport} />
+                    <ReportDetail report={report} />
                   </div>
                   <div id="tutorial-report-images" className="w-full md:w-[31%]">
                     <ReportImages

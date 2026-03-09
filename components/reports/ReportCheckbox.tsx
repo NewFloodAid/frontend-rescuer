@@ -1,19 +1,22 @@
-import { ReportAssistance } from "@/types/report_assistance";
+﻿import { ReportAssistance } from "@/types/report_assistance";
 
 interface ReportCheckboxProps {
-  reportStatus: string;
   reportAssistance: ReportAssistance;
-  onCheckboxChange: (id: number, isActive: boolean) => void;
 }
 
-const ReportCheckbox: React.FC<ReportCheckboxProps> = ({
-  reportStatus,
-  reportAssistance,
-  onCheckboxChange,
-}) => {
+const ReportCheckbox: React.FC<ReportCheckboxProps> = ({ reportAssistance }) => {
+  const extraDetail = reportAssistance.extraDetail?.trim();
+  const extraFieldLabel = reportAssistance.assistanceType.extraFieldLabel?.trim();
+
   return (
-    <div className="font-semibold flex items-center mb-[2%]">
-      {reportAssistance.assistanceType.name}
+    <div className="mb-[2%]">
+      <div className="font-semibold">{reportAssistance.assistanceType.name}</div>
+      {extraDetail && (
+        <div className="mt-[0.5%] break-words pl-[4%] text-[13px] font-normal text-[#555555] md:text-[1.6vmin]">
+          {(extraFieldLabel || "รายละเอียดเพิ่มเติม") + ": "}
+          {extraDetail}
+        </div>
+      )}
     </div>
   );
 };

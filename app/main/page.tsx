@@ -123,7 +123,7 @@ const initialMockReport: Report = {
   reportAssistances: [
     {
       id: 1,
-      assistanceType: { id: 1, name: "กู้ภัย", unit: "คัน" },
+      assistanceType: { id: 1, name: "กู้ภัย" },
       quantity: 1,
       isActive: true,
     }
