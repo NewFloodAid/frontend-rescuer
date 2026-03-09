@@ -1,6 +1,6 @@
 import axiosClient from "@/libs/axios";
 import { useToastContext } from "@/providers/Toast";
-import { GetReportsQueryParams, Report } from "@/types/report";
+import { GetReportsQueryParams, PaginatedResponse, Report } from "@/types/report";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JSZip from "jszip";
 
@@ -14,9 +14,23 @@ const getAuthHeaders = () => {
 
 export const useQueryGetReports = (params: GetReportsQueryParams) => {
   return useQuery({
-    queryKey: ["reports"],
+    queryKey: ["reports", "list", params],
     queryFn: async () => {
       const response = await axiosClient.get<Report[]>("/reports/filters", {
+        params,
+        headers: getAuthHeaders(),
+      });
+      return response.data;
+    },
+    refetchInterval: 5000,
+  });
+};
+
+export const useQueryGetReportsPaged = (params: GetReportsQueryParams) => {
+  return useQuery({
+    queryKey: ["reports", "paged", params],
+    queryFn: async () => {
+      const response = await axiosClient.get<PaginatedResponse<Report>>("/reports/filters/paged", {
         params,
         headers: getAuthHeaders(),
       });

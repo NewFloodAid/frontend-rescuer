@@ -103,10 +103,6 @@ export default function Map() {
     );
   }, [reports]);
 
-  useEffect(() => {
-    queryReports.refetch();
-  }, [queryParams]);
-
   const onChangeReportsQueryParam = useCallback(
     (field: string, value: string | number | string[] | number[] | null) => {
       setQueryParams((prevParams) => ({ ...prevParams, [field]: value }));

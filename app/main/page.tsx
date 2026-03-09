@@ -1,7 +1,7 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import NavBar from "@/components/Navbar";
-import { useQueryGetReports } from "@/api/report";
+import { useQueryGetReportsPaged } from "@/api/report";
 import SearchPart from "@/components/search/Search";
 import ReportCard from "@/components/reports/ReportCard";
 import FilterPart from "@/components/search/Filter";
@@ -129,10 +129,12 @@ const initialMockReport: Report = {
 };
 
 export default function Main() {
-  const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({});
-  const queryReports = useQueryGetReports(queryParams);
+  const [queryParams, setQueryParams] = useState<GetReportsQueryParams>({
+    page: 0,
+    size: REPORT_ITEM_PER_PAGE,
+  });
+  const queryReports = useQueryGetReportsPaged(queryParams);
   const [searchInput, setSearchInput] = useState("");
-  const [page, setPage] = useState(1);
   const router = useRouter();
   const { startTutorial, closeTutorial } = useTutorial();
 
@@ -250,55 +252,46 @@ export default function Main() {
     }
   }, [router, startFullMainTutorial]);
 
-  const reports = useMemo(() => queryReports.data || [], [queryReports.data]);
-
-  const filteredReports = useMemo(() => {
-    const searchLower = searchInput.toLowerCase().trim();
-
-    if (!searchLower) return reports; // Return all if empty search
-
-    return reports.filter((report) => {
-      // Search across all text fields
-      const searchableText = [
-        report.firstName,
-        report.lastName,
-        report.mainPhoneNumber,
-        report.reservePhoneNumber || "",
-        report.additionalDetail,
-        report.afterAdditionalDetail || "",
-        report.location?.subDistrict || "",
-        report.location?.district || "",
-        report.location?.province || "",
-        report.reportStatus?.status || "",
-        // Add assistance types
-        ...report.reportAssistances.map(a => a.assistanceType?.name || ""),
-      ].join(" ").toLowerCase();
-
-      return searchableText.includes(searchLower);
-    });
-  }, [searchInput, reports]);
-
-  useEffect(() => {
-    const totalPages = Math.ceil(filteredReports.length / REPORT_ITEM_PER_PAGE);
-    if (page > totalPages) {
-      setPage(1);
-    }
-  }, [filteredReports, page]);
-
-  useEffect(() => {
-    queryReports.refetch();
-  }, [queryParams]);
-
-  const handleChangePage = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
-
   const onChangeReportsQueryParam = useCallback(
     (field: string, value: string | number | string[] | number[] | null) => {
-      setQueryParams((prevParams) => ({ ...prevParams, [field]: value }));
+      setQueryParams((prevParams) => {
+        const nextParams = { ...prevParams } as Record<
+          string,
+          string | number | string[] | number[] | undefined
+        >;
+
+        if (value === null || value === "") {
+          delete nextParams[field];
+        } else {
+          nextParams[field] = value;
+        }
+
+        if (field !== "page") {
+          nextParams.page = 0;
+        }
+
+        nextParams.size = REPORT_ITEM_PER_PAGE;
+        return nextParams as GetReportsQueryParams;
+      });
     },
     []
   );
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      onChangeReportsQueryParam("keyword", searchInput.trim() || null);
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [searchInput, onChangeReportsQueryParam]);
+
+  const reports = queryReports.data?.content || [];
+  const totalPages = queryReports.data?.totalPages || 0;
+  const currentPage = (queryParams.page ?? 0) + 1;
+
+  const handleChangePage = (_event: React.ChangeEvent<unknown>, value: number) => {
+    onChangeReportsQueryParam("page", value - 1);
+  };
 
   const handleMockUpdate = useCallback(() => {
     const currentStatus = mockReport.reportStatus.status;
@@ -329,11 +322,6 @@ export default function Main() {
       startMockTutorial(nextStatus);
     }
   }, [mockReport, startMockTutorial]);
-
-  const paginatedReports = useMemo(
-    () => filteredReports.slice((page - 1) * REPORT_ITEM_PER_PAGE, page * REPORT_ITEM_PER_PAGE),
-    [filteredReports, page]
-  );
 
   if (queryReports.isPending) {
     return <Loader />;
@@ -368,22 +356,22 @@ export default function Main() {
           />
         </div>
         <div id="tutorial-reports-desktop" className="hidden md:flex flex-wrap gap-[1.5%] items-start mt-4">
-          {paginatedReports.map((report) => (
+          {reports.map((report) => (
             <ReportCard report={report} key={report.id} />
           ))}
         </div>
         <div id="tutorial-reports-mobile" className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 mt-4 pb-4 w-full" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-          {paginatedReports.map((report) => (
+          {reports.map((report) => (
             <div key={report.id} className="w-[85vw] shrink-0 snap-center flex justify-center">
               <ReportCard report={report} />
             </div>
           ))}
         </div>
-        {paginatedReports.length > 0 && (
+        {reports.length > 0 && totalPages > 0 && (
           <Stack spacing={2} sx={{ marginY: "2%", display: { xs: "none", md: "flex" }, alignItems: "center" }}>
             <Pagination
-              count={Math.ceil(filteredReports.length / REPORT_ITEM_PER_PAGE)}
-              page={page}
+              count={totalPages}
+              page={currentPage}
               onChange={handleChangePage}
               size="large"
               sx={{

@@ -10,8 +10,12 @@ export const GetReportsQueryParamsSchema = z.object({
   province: z.string().optional(),
   postalCode: z.string().optional(),
   reportStatusId: z.number().optional(),
+  assistanceTypeId: z.number().optional(),
+  keyword: z.string().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
+  page: z.number().optional(),
+  size: z.number().optional(),
   isUser: z.boolean().optional(),
   userId: z.string().optional(),
 });
@@ -38,3 +42,13 @@ export const ReportSchema = z.object({
 
 export type Report = z.infer<typeof ReportSchema>;
 export type GetReportsQueryParams = z.infer<typeof GetReportsQueryParamsSchema>;
+
+export type PaginatedResponse<T> = {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+};
