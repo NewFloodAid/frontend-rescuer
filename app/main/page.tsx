@@ -110,14 +110,12 @@ const initialMockReport: Report = {
       name: "mock-before.jpg",
       url: "/images/bg.png",
       phase: "BEFORE",
-      imageCategory: { id: 1, name: "Before image", fileLimit: 4 },
     },
     {
       id: 2,
       name: "mock-after.jpg",
       url: "/images/bg.png",
       phase: "AFTER",
-      imageCategory: { id: 2, name: "After image", fileLimit: 4 },
     }
   ],
   reportAssistances: [
