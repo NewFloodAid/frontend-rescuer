@@ -110,7 +110,7 @@ export default function Map() {
     []
   );
 
-  if (queryReports.isPending) {
+  if (queryReports.isPending && !queryReports.data) {
     return <Loader />;
   }
 

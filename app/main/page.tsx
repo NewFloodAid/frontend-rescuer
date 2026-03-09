@@ -323,7 +323,7 @@ export default function Main() {
     }
   }, [mockReport, startMockTutorial]);
 
-  if (queryReports.isPending) {
+  if (queryReports.isPending && !queryReports.data) {
     return <Loader />;
   }
 

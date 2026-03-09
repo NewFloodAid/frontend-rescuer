@@ -1,7 +1,7 @@
 import axiosClient from "@/libs/axios";
 import { useToastContext } from "@/providers/Toast";
 import { GetReportsQueryParams, PaginatedResponse, Report } from "@/types/report";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JSZip from "jszip";
 
 const getAuthHeaders = () => {
@@ -22,6 +22,7 @@ export const useQueryGetReports = (params: GetReportsQueryParams) => {
       });
       return response.data;
     },
+    placeholderData: keepPreviousData,
     refetchInterval: 5000,
   });
 };
@@ -36,6 +37,7 @@ export const useQueryGetReportsPaged = (params: GetReportsQueryParams) => {
       });
       return response.data;
     },
+    placeholderData: keepPreviousData,
     refetchInterval: 5000,
   });
 };
