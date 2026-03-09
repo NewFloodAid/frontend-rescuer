@@ -85,3 +85,16 @@
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); 
   }
 }
+
+
+/* Leaflet stacking */
+.leaflet-container {
+  z-index: 1;
+}
+
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 10;
+}
+

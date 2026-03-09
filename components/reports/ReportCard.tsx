@@ -19,24 +19,24 @@ import ReportDetail from "./ReportDetail";
 import { useMutationDeleteReport } from "@/api/report";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { useMap } from "@vis.gl/react-google-maps";
 
 interface ReportCardProps {
   report: Report;
 }
 
 const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
-  const map = useMap();
   const [isReportDetailModalOpen, setIsReportDetailModalOpen] = useState(false);
 
   const handleMarkerHover = (report: Report) => {
-    if (map) {
-      map.panTo({
-        lat: report.location.latitude,
-        lng: report.location.longitude,
-      });
-      map.setZoom(20);
-    }
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(
+      new CustomEvent("rescuer-map-focus", {
+        detail: {
+          lat: report.location.latitude,
+          lng: report.location.longitude,
+        },
+      }),
+    );
   };
 
   const showReportDetailModal = () => {
@@ -454,3 +454,4 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
 };
 
 export default ReportCard;
+
