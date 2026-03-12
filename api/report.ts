@@ -1,6 +1,11 @@
 import axiosClient from "@/libs/axios";
 import { useToastContext } from "@/providers/Toast";
-import { GetReportsQueryParams, PaginatedResponse, Report } from "@/types/report";
+import {
+  AssistanceTopicStat,
+  GetReportsQueryParams,
+  PaginatedResponse,
+  Report,
+} from "@/types/report";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JSZip from "jszip";
 
@@ -39,6 +44,27 @@ export const useQueryGetReportsPaged = (params: GetReportsQueryParams) => {
     },
     placeholderData: keepPreviousData,
     refetchInterval: 5000,
+  });
+};
+
+export type GetTopAssistanceTopicsParams = {
+  startDate?: string;
+  endDate?: string;
+  limit?: number;
+};
+
+export const useQueryGetTopAssistanceTopics = (params: GetTopAssistanceTopicsParams) => {
+  return useQuery({
+    queryKey: ["reports", "stats", "assistance-top", params],
+    queryFn: async () => {
+      const response = await axiosClient.get<AssistanceTopicStat[]>("/reports/stats/assistance-top", {
+        params,
+        headers: getAuthHeaders(),
+      });
+      return response.data;
+    },
+    placeholderData: keepPreviousData,
+    refetchInterval: 30000,
   });
 };
 

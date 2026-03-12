@@ -54,6 +54,15 @@ const NavBar = () => {
         </Button>
 
         <Button
+          id="nav-stats"
+          variant="contained"
+          sx={buttonStyles}
+          onClick={() => router.push("/stats")}
+        >
+          <b className="font-andika">สถิติ</b>
+        </Button>
+
+        <Button
           id="nav-assistance-types"
           variant="contained"
           sx={buttonStyles}

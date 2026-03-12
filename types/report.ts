@@ -52,3 +52,10 @@ export type PaginatedResponse<T> = {
   hasNext: boolean;
   hasPrevious: boolean;
 };
+
+export type AssistanceTopicStat = {
+  assistanceTypeId: number;
+  assistanceTypeName: string;
+  reportCount: number;
+  totalQuantity: number;
+};
