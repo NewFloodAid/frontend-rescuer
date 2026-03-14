@@ -176,8 +176,6 @@ export default function StatsPage() {
                         <span className="font-semibold">{item.reportCount}</span> รายการ
                         <span className="mx-2">|</span>
                         <span>{percentOfTotal.toFixed(1)}%</span>
-                        <span className="mx-2">|</span>
-                        <span>จำนวนรวม {item.totalQuantity}</span>
                       </div>
                     </div>
 
