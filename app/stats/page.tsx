@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import NavBar from "@/components/Navbar";
 import Loader from "@/components/Loader";
 import { isAuthenticated } from "@/api/login";
-import { useQueryGetTopAssistanceTopics } from "@/api/report";
+import { useQueryGetReports } from "@/api/report";
 
 type StatFilters = {
   startDate: string;
@@ -37,18 +37,65 @@ export default function StatsPage() {
     }
   }, [router]);
 
-  const queryStats = useQueryGetTopAssistanceTopics({
+  const queryReports = useQueryGetReports({
     startDate: filters.startDate || undefined,
     endDate: filters.endDate || undefined,
-    limit: filters.limit,
   });
   const errorMessage =
-    queryStats.error instanceof Error ? queryStats.error.message : "โหลดข้อมูลสถิติไม่สำเร็จ";
+    queryReports.error instanceof Error
+      ? queryReports.error.message
+      : "โหลดข้อมูลสถิติไม่สำเร็จ";
 
-  const stats = queryStats.data ?? [];
+  const reports = queryReports.data ?? [];
+  const allStats = useMemo(() => {
+    const statsByAssistanceType = new Map<
+      number,
+      {
+        assistanceTypeId: number;
+        assistanceTypeName: string;
+        reportCount: number;
+        totalQuantity: number;
+      }
+    >();
+
+    for (const report of reports) {
+      for (const assistance of report.reportAssistances) {
+        const quantity = assistance.quantity ?? 0;
+        const shouldCount = quantity > 0 || assistance.isActive;
+        if (!shouldCount) {
+          continue;
+        }
+
+        const assistanceTypeId = assistance.assistanceType.id;
+        const existing = statsByAssistanceType.get(assistanceTypeId);
+
+        if (existing) {
+          existing.reportCount += 1;
+          existing.totalQuantity += quantity;
+          continue;
+        }
+
+        statsByAssistanceType.set(assistanceTypeId, {
+          assistanceTypeId,
+          assistanceTypeName: assistance.assistanceType.name,
+          reportCount: 1,
+          totalQuantity: quantity,
+        });
+      }
+    }
+
+    return Array.from(statsByAssistanceType.values()).sort((a, b) => {
+      if (b.reportCount !== a.reportCount) {
+        return b.reportCount - a.reportCount;
+      }
+      return a.assistanceTypeName.localeCompare(b.assistanceTypeName, "th");
+    });
+  }, [reports]);
+
+  const stats = useMemo(() => allStats.slice(0, filters.limit), [allStats, filters.limit]);
   const totalRequests = useMemo(
-    () => stats.reduce((sum, item) => sum + item.reportCount, 0),
-    [stats]
+    () => allStats.reduce((sum, item) => sum + item.reportCount, 0),
+    [allStats]
   );
   const maxRequests = useMemo(
     () => stats.reduce((max, item) => Math.max(max, item.reportCount), 0),
@@ -64,7 +111,7 @@ export default function StatsPage() {
     setFilters(defaultFilters);
   };
 
-  if (queryStats.isPending && !queryStats.data) {
+  if (queryReports.isPending && !queryReports.data) {
     return <Loader />;
   }
 
@@ -145,11 +192,11 @@ export default function StatsPage() {
             </div>
           </div>
 
-          {queryStats.isFetching && (
+          {queryReports.isFetching && (
             <div className="mb-2 text-[2vmin] text-[#777777]">กำลังอัปเดตข้อมูล...</div>
           )}
 
-          {queryStats.isError ? (
+          {queryReports.isError ? (
             <div className="rounded-xl bg-[#fff1f2] px-4 py-6 text-center text-[2.2vmin] text-[#b91c1c]">
               {errorMessage}
             </div>
