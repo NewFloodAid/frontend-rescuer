@@ -126,7 +126,7 @@ export default function Map() {
             title="Start Tutorial"
           >
             <HelpOutlineIcon />
-            <span>Help</span>
+            <span>วิธีใช้</span>
           </button>
         </div>
         <div className="flex flex-row items-start">

@@ -75,7 +75,7 @@ export default function StatsPage() {
       <div className="px-[3%] py-5 font-kanit">
         <h1 className="text-[4vmin] font-bold text-[#505050]">สถิติเรื่องแจ้งเหตุ</h1>
         <p className="mt-1 text-[2.2vmin] text-[#666666]">
-          หัวข้อความช่วยเหลือที่ถูกเลือกมากที่สุด
+          หัวข้อแจ้งเรื่องที่ถูกเลือกมากที่สุด
         </p>
 
         <div className="mt-4 grid grid-cols-1 gap-3 rounded-2xl border border-[#d8d8d8] bg-[#EFEFEF] p-4 md:grid-cols-4">
@@ -139,7 +139,7 @@ export default function StatsPage() {
 
         <div className="mt-4 rounded-2xl border border-[#d8d8d8] bg-white p-4">
           <div className="mb-3 flex items-center justify-between">
-            <div className="text-[2.6vmin] font-semibold text-[#3a3a3a]">อันดับหัวข้อช่วยเหลือ</div>
+            <div className="text-[2.6vmin] font-semibold text-[#3a3a3a]">อันดับหัวข้อแจ้งเรื่อง</div>
             <div className="text-[2vmin] text-[#666666]">
               รวมทั้งหมด <b>{totalRequests}</b> รายการ
             </div>
