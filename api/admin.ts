@@ -188,6 +188,40 @@ export const useMutationDeactivateAdmin = () => {
   });
 };
 
+export const useMutationDeleteAdmin = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToastContext();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const response = await axiosClient.delete(
+        `/admin/admins/${id}/permanent`,
+        {
+          headers: getAuthHeaders(),
+        }
+      );
+      return response.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admins"] });
+      showToast({
+        severity: "success",
+        summary: "สำเร็จ",
+        detail: "ลบผู้ดูแลเรียบร้อยแล้ว",
+        life: 3000,
+      });
+    },
+    onError: (error: any) => {
+      showToast({
+        severity: "error",
+        summary: "เกิดข้อผิดพลาด",
+        detail: error.response?.data?.message || "ไม่สามารถลบผู้ดูแลได้",
+        life: 3000,
+      });
+    },
+  });
+};
+
 export const useQueryGetAuditLogs = (page: number, size: number) => {
   return useQuery({
     queryKey: ["auditLogs", page, size],

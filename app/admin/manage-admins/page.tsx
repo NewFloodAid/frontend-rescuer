@@ -9,6 +9,7 @@ import {
   useMutationCreateAdmin,
   useMutationUpdateAdmin,
   useMutationDeactivateAdmin,
+  useMutationDeleteAdmin,
   useQueryGetProvinces,
   useQueryGetDistricts,
 } from "@/api/admin";
@@ -41,6 +42,7 @@ export default function ManageAdmins() {
   const createAdmin = useMutationCreateAdmin();
   const updateAdmin = useMutationUpdateAdmin();
   const deactivateAdmin = useMutationDeactivateAdmin();
+  const deleteAdmin = useMutationDeleteAdmin();
 
   // Keep selectedProvince in sync with form province field
   useEffect(() => {
@@ -93,6 +95,25 @@ export default function ManageAdmins() {
   const handleDeactivate = async (id: number) => {
     if (confirm("คุณต้องการปิดใช้งานผู้ดูแลคนนี้หรือไม่?")) {
       await deactivateAdmin.mutateAsync(id);
+    }
+  };
+
+  const handleActivate = async (id: number) => {
+    if (confirm("คุณต้องการเปิดใช้งานผู้ดูแลคนนี้อีกครั้งหรือไม่?")) {
+      await updateAdmin.mutateAsync({
+        id,
+        request: { isActive: true },
+      });
+    }
+  };
+
+  const handleDelete = async (id: number, username: string) => {
+    if (
+      confirm(
+        `⚠️ คุณต้องการลบผู้ดูแล "${username}" อย่างถาวรหรือไม่?\n\nการดำเนินการนี้ไม่สามารถย้อนกลับได้!`
+      )
+    ) {
+      await deleteAdmin.mutateAsync(id);
     }
   };
 
@@ -227,19 +248,38 @@ export default function ManageAdmins() {
                       ? new Date(admin.lastLoginAt).toLocaleString("th-TH")
                       : "-"}
                   </td>
-                  <td className="p-3 text-center">
+                  <td className="p-3 text-center whitespace-nowrap">
                     <button
                       onClick={() => openEditModal(admin)}
-                      className="px-2 py-1 text-blue-600 hover:text-blue-800 mr-2"
+                      className="px-2 py-1 text-blue-600 hover:text-blue-800 mr-1"
                     >
                       แก้ไข
                     </button>
-                    {admin.isActive && admin.role !== "SUPER_ADMIN" && (
+                    {admin.role !== "SUPER_ADMIN" && (
+                      admin.isActive ? (
+                        <button
+                          onClick={() => handleDeactivate(admin.id)}
+                          className="px-2 py-1 text-orange-600 hover:text-orange-800 mr-1"
+                        >
+                          ปิดใช้งาน
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleActivate(admin.id)}
+                          className="px-2 py-1 text-green-600 hover:text-green-800 mr-1"
+                        >
+                          เปิดใช้งาน
+                        </button>
+                      )
+                    )}
+                    {admin.role !== "SUPER_ADMIN" && (
                       <button
-                        onClick={() => handleDeactivate(admin.id)}
-                        className="px-2 py-1 text-red-600 hover:text-red-800"
+                        onClick={() =>
+                          handleDelete(admin.id, admin.username)
+                        }
+                        className="px-2 py-1 text-red-600 hover:text-red-800 font-bold"
                       >
-                        ปิดใช้งาน
+                        ลบ
                       </button>
                     )}
                   </td>
