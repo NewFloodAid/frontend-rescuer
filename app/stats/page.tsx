@@ -4,13 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavBar from "@/components/Navbar";
 import Loader from "@/components/Loader";
-import { isAuthenticated } from "@/api/login";
+import { isAuthenticated, isSuperAdmin } from "@/api/login";
 import { useQueryGetReports } from "@/api/report";
+import { useQueryGetDistricts } from "@/api/district";
 
 type StatFilters = {
   startDate: string;
   endDate: string;
   limit: number;
+  districtId?: number;
 };
 
 const defaultFilters: StatFilters = {
@@ -30,6 +32,13 @@ export default function StatsPage() {
   const router = useRouter();
   const [filters, setFilters] = useState<StatFilters>(defaultFilters);
   const [draftFilters, setDraftFilters] = useState<StatFilters>(defaultFilters);
+  const [isSuper, setIsSuper] = useState(false);
+
+  useEffect(() => {
+    setIsSuper(isSuperAdmin());
+  }, []);
+
+  const districtsQuery = useQueryGetDistricts("เชียงใหม่");
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -40,6 +49,7 @@ export default function StatsPage() {
   const queryReports = useQueryGetReports({
     startDate: filters.startDate || undefined,
     endDate: filters.endDate || undefined,
+    districtId: filters.districtId,
   });
   const errorMessage =
     queryReports.error instanceof Error
@@ -165,6 +175,29 @@ export default function StatsPage() {
               <option value={50}>Top 50</option>
             </select>
           </label>
+
+          {isSuper && (
+            <label className="flex flex-col gap-1 text-[2vmin] text-[#555555]">
+              เขต
+              <select
+                value={draftFilters.districtId || ""}
+                onChange={(event) =>
+                  setDraftFilters((prev) => ({
+                    ...prev,
+                    districtId: event.target.value ? Number(event.target.value) : undefined,
+                  }))
+                }
+                className="rounded-lg border border-[#c9c9c9] px-3 py-2 text-[2.1vmin]"
+              >
+                <option value="">ทั้งหมด</option>
+                {districtsQuery.data?.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.nameInThai}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <div className="flex items-end gap-2">
             <button

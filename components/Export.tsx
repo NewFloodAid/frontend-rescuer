@@ -7,11 +7,12 @@ import Box from "@mui/material/Box";
 import { excel } from "@/api/excel";
 import DatePicker from "./DatePicker"; // Import DatePicker component
 import DownloadIcon from "@mui/icons-material/Download";
+import Image from "next/image";
 
 const buttonStyles = {
-  width: "auto",
-  minWidth: "max-content",
-  height: "5dvh",
+  width: "100%",
+  minWidth: "100%",
+  height: "50px",
   padding: "0 1.5dvw",
   display: "flex",
   flexDirection: "row",
@@ -81,7 +82,9 @@ const ExportButton = ({
     <>
       <Button variant="contained" sx={{ ...buttonStyles, gap: "0.5vw" }} onClick={handleOpen}>
         <b className="font-andika">{text}</b>
-        <img src="/images/excel-logo.png" alt="Excel" className="w-[6vmin] h-auto object-contain" />
+        <div className="relative w-[6vmin] h-[6vmin]">
+          <Image src="/images/excel-logo.png" alt="Excel" fill className="object-contain" />
+        </div>
       </Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyles}>
@@ -104,28 +107,36 @@ const ExportButton = ({
             </div>
           </div>
 
-          <div className="flex justify-center items-center mt-[6%] gap-[3%]">
+          <div className="flex justify-center items-center mt-[6%] gap-[3%] w-full">
             <Button
               variant="contained"
               disabled={isLoading}
               sx={{
                 ...buttonStyles,
+                width: "auto",
+                minWidth: "120px",
                 border: "1px solid rgba(0, 0, 0, 0.2)",
                 backgroundColor: "#52b202 ",
+                "&:hover": { backgroundColor: "#459601" },
                 color: "white",
+                justifyContent: "center",
               }}
               onClick={handleExport}
             >
               {isLoading ? "กำลังดาวน์โหลด..." : "ดาวน์โหลด"}
-              <DownloadIcon />
+              <DownloadIcon sx={{ ml: 1 }} />
             </Button>
             <Button
               variant="outlined"
               sx={{
                 ...buttonStyles,
+                width: "auto",
+                minWidth: "120px",
                 border: "1px solid rgba(0, 0, 0, 0.2)",
                 backgroundColor: "#FF0000",
+                "&:hover": { backgroundColor: "#CC0000" },
                 color: "white",
+                justifyContent: "center",
               }}
               onClick={handleClose}
             >

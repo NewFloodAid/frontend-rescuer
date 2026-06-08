@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Report } from "@/types/report";
-import { Card, CardMedia, Modal, Box, IconButton } from "@mui/material";
+import { Card, Modal, Box, IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Image from "next/image";
 
 interface ReportImagesProps {
   report: Report;
@@ -40,29 +41,20 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
         {hasImages ? (
           <div className="flex flex-wrap gap-[2%] w-full h-full p-[2%]">
             {imagesToShow.map((image, index) => (
-              <CardMedia
+              <div
                 key={index}
-                component="img"
-                image={image.url || "/images/bg.png"}
-                alt={`Report image ${index + 1}`}
-                onClick={() => handleImageClick(image.url || "/images/bg.png")}
-                sx={{
-                  width: "49%",
-                  height: "49%",
-                  aspectRatio: "1 / 1",
-                  objectFit: "cover",
-                  border: "1px solid rgba(0, 0, 0, 0.5)",
-                  borderRadius: "10px",
-                  backgroundColor: "#FFFFFF",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  "&:hover": {
-                    opacity: 0.8,
-                  },
-                }}
-              />
+                className="relative flex items-center justify-center bg-white border border-black/50 rounded-[10px] overflow-hidden"
+                style={{ width: "49%", height: "49%", aspectRatio: "1 / 1" }}
+              >
+                <Image
+                  src={image.url || "/images/bg.png"}
+                  alt={`Report image ${index + 1}`}
+                  onClick={() => handleImageClick(image.url || "/images/bg.png")}
+                  fill
+                  className="object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
             ))}
             {[...Array(placeholders)].map((_, index) => (
               <div
@@ -114,16 +106,16 @@ const ReportImages: React.FC<ReportImagesProps> = ({ report }) => {
             <CancelIcon sx={{ fontSize: 40 }} />
           </IconButton>
           {selectedImage && (
-            <img
-              src={selectedImage}
-              alt="Full size preview"
-              style={{
-                maxWidth: "100%",
-                maxHeight: "90vh",
-                objectFit: "contain",
-                borderRadius: "8px",
-              }}
-            />
+            <div className="relative w-[90vw] h-[90vh] max-w-[1200px] max-h-[800px]">
+              <Image
+                src={selectedImage}
+                alt="Full size preview"
+                fill
+                className="object-contain rounded-[8px]"
+                sizes="100vw"
+                quality={100}
+              />
+            </div>
           )}
         </Box>
       </Modal>

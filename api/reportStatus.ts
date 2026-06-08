@@ -15,6 +15,10 @@ export const useQueryGetReportStatuses = (
         "/reportStatuses",
         {
           params,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            "X-Source-App": "Web",
+          },
         }
       );
       return response.data;

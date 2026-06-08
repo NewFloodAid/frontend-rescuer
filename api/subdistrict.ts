@@ -10,6 +10,10 @@ export const useQueryGetSubdistrictFromProvince = (province:string) => {
           `/subdistricts`,
           {
             params: { province },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+              "X-Source-App": "Web",
+            },
           }
         );
         return response.data;

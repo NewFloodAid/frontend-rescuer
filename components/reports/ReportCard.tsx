@@ -1,7 +1,7 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import { Button } from "@mui/material";
+import Image from "next/image";
 
 import { Report } from "@/types/report";
 import { ReportStatusEnum } from "@/types/report_status";
@@ -166,12 +166,15 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
                 <div className="w-[30%] shrink-0 pl-2">
                   {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
-                    <CardMedia
-                      key={`success-before-img-${img.url || idx}`}
-                      component="img"
-                      image={img.url || "/images/bg.png"}
-                      sx={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "8px" }}
-                    />
+                    <div key={`success-before-img-${img.url || idx}`} className="relative w-full aspect-square rounded-[8px] overflow-hidden">
+                      <Image
+                        src={img.url || "/images/bg.png"}
+                        alt="Before"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
                   ))}
                 </div>
               )}
@@ -197,12 +200,15 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 {report.images.filter(img => img.phase === "AFTER").length > 0 && (
                   <div className="w-[30%] shrink-0 pl-2">
                     {report.images.filter(img => img.phase === "AFTER").slice(0, 1).map((img, idx) => (
-                      <CardMedia
-                        key={`success-after-img-${img.url || idx}`}
-                        component="img"
-                        image={img.url || "/images/bg.png"}
-                        sx={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "8px" }}
-                      />
+                      <div key={`success-after-img-${img.url || idx}`} className="relative w-full aspect-square rounded-[8px] overflow-hidden">
+                        <Image
+                          src={img.url || "/images/bg.png"}
+                          alt="After"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
@@ -260,12 +266,15 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               {report.images.filter(img => img.phase === "BEFORE").length > 0 && (
                 <div className="w-[30%] shrink-0 pl-2">
                   {report.images.filter(img => img.phase === "BEFORE").slice(0, 1).map((img, idx) => (
-                    <CardMedia
-                      key={`pending-before-img-${img.url || idx}`}
-                      component="img"
-                      image={img.url || "/images/bg.png"}
-                      sx={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "8px" }}
-                    />
+                    <div key={`pending-before-img-${img.url || idx}`} className="relative w-full aspect-square rounded-[8px] overflow-hidden">
+                      <Image
+                        src={img.url || "/images/bg.png"}
+                        alt="Before"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
                   ))}
                 </div>
               )}
@@ -333,11 +342,12 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                     </span>
                   </div>
                   <div className="flex flex-col gap-6 w-full">
-                    <div className="w-full flex justify-center items-center">
-                      <img
+                    <div className="w-full flex justify-center items-center relative h-[25vh]">
+                      <Image
                         src="/images/solved.png"
                         alt="Solved"
-                        className="w-[50%] h-auto aspect-square object-contain"
+                        fill
+                        className="object-contain"
                       />
                     </div>
                     <div className="w-full">

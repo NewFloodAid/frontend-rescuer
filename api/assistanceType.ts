@@ -1,4 +1,4 @@
-﻿import axiosClient from "@/libs/axios";
+import axiosClient from "@/libs/axios";
 import { AssistanceType } from "@/types/assistance_type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToastContext } from "@/providers/Toast";
@@ -9,6 +9,7 @@ export interface AssistanceTypePayload {
   extraFieldLabel?: string | null;
   extraFieldPlaceholder?: string | null;
   extraFieldRequired?: boolean;
+  district?: { id: number } | null;
 }
 
 const getAuthHeaders = () => {
@@ -23,17 +24,20 @@ export const useQueryGetAssistanceTypes = () => {
   return useQuery({
     queryKey: ["assistanceTypes", "active"],
     queryFn: async () => {
-      const response = await axiosClient.get<AssistanceType[]>("/assistanceTypes");
+      const response = await axiosClient.get<AssistanceType[]>("/assistanceTypes", {
+        headers: getAuthHeaders(),
+      });
       return response.data;
     },
   });
 };
 
-export const useQueryGetAllAssistanceTypes = () => {
+export const useQueryGetAllAssistanceTypes = (districtId?: number | null) => {
   return useQuery({
-    queryKey: ["assistanceTypes", "all"],
+    queryKey: ["assistanceTypes", "all", districtId],
     queryFn: async () => {
-      const response = await axiosClient.get<AssistanceType[]>("/assistanceTypes/all", {
+      const url = districtId != null ? `/assistanceTypes/all?districtId=${districtId}` : "/assistanceTypes/all";
+      const response = await axiosClient.get<AssistanceType[]>(url, {
         headers: getAuthHeaders(),
       });
       return response.data;

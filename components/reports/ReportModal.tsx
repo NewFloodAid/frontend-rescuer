@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Image from "next/image";
 import { Report } from "@/types/report";
 import { ReportStatusEnum } from "@/types/report_status";
 import ReportMap from "./ReportMap";
@@ -238,11 +239,12 @@ const ReportModal: React.FC<ReportModalProps> = ({
                       <span className="text-[16px] md:text-[2.2vmin] font-bold text-[#22C55E]">ผลการดำเนินการ</span>
                     </div>
                     <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-[3%] w-full">
-                      <div className="w-full md:w-[31%] flex justify-center items-center">
-                        <img
+                      <div className="w-full h-[25vh] flex justify-center items-center relative">
+                        <Image
                           src="/images/solved.png"
                           alt="Solved"
-                          className="w-full h-auto aspect-square object-contain"
+                          fill
+                          className="object-contain"
                         />
                       </div>
                       <div id="tutorial-report-feedback" className="w-full md:w-[31%]">
@@ -410,7 +412,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
                 onClick={() => downloadWord(report)}
               >
                 ดาวน์โหลดไฟล์
-                <img src="/images/word-logo.png" alt="Word" className="w-[6vmin] h-auto object-contain" />
+                <div className="relative w-[6vmin] h-[6vmin]">
+                  <Image src="/images/word-logo.png" alt="Word" fill className="object-contain" />
+                </div>
               </Button>
               <Button
                 id="tutorial-download-images"

@@ -4,28 +4,21 @@ import "../styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PrimeReactProvider } from "primereact/api";
 import { Toast } from "primereact/toast";
-import { useRef } from "react";
+import { useState } from "react";
 import { TutorialProvider } from "@/providers/TutorialProvider";
-
-type ToastSeverity = "success" | "info" | "warn" | "error";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
-  const toastRef = useRef<Toast>(null);
-
-  const showToast = (
-    severity: ToastSeverity,
-    summary: string,
-    detail: string
-  ) => {
-    toastRef.current?.show({ severity, summary, detail, life: 3000 });
-  };
-
-  showToast("success", "Welcome", "Welcome to the application");
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,
+      },
+    },
+  }));
   return (
     <html lang="en">
       <head>

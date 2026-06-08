@@ -81,7 +81,7 @@ export const useMutationUpdateReport = () => {
       files?: File[];
     }) => {
       const formData = new FormData();
-      formData.append("report", JSON.stringify(report));
+      formData.append("report", new Blob([JSON.stringify(report)], { type: "application/json" }));
       if (files) {
         files.forEach((file) => {
           formData.append("files", file);

@@ -18,6 +18,7 @@ export const GetReportsQueryParamsSchema = z.object({
   size: z.number().optional(),
   isUser: z.boolean().optional(),
   userId: z.string().optional(),
+  districtId: z.number().optional(),
 });
 
 export const ReportSchema = z.object({
