@@ -7,6 +7,7 @@ import "driver.js/dist/driver.css";
 type TutorialContextType = {
   startTutorial: (steps: DriveStep[], key: string, onEnd?: () => void) => void;
   closeTutorial: () => void;
+  driverRef: React.RefObject<Driver | null>;
 };
 
 const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
@@ -62,7 +63,7 @@ export const TutorialProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   return (
-    <TutorialContext.Provider value={{ startTutorial, closeTutorial }}>
+    <TutorialContext.Provider value={{ startTutorial, closeTutorial, driverRef: driverObj }}>
       {children}
     </TutorialContext.Provider>
   );

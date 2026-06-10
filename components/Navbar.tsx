@@ -94,6 +94,7 @@ const NavBar = () => {
 
       <div>
         <IconButton
+          id="nav-hamburger"
           onClick={toggleDrawer(true)}
           sx={{ color: "white" }}
           aria-label="menu"
@@ -135,6 +136,7 @@ const NavBar = () => {
 
           <div className="flex flex-col gap-3">
             <Button
+              id="drawer-main"
               variant={pathname === "/main" ? "contained" : "outlined"}
               sx={{
                  ...drawerButtonStyles,
@@ -149,6 +151,7 @@ const NavBar = () => {
             </Button>
 
             <Button
+              id="drawer-map"
               variant={pathname === "/map" ? "contained" : "outlined"}
               sx={{
                  ...drawerButtonStyles,
@@ -163,6 +166,7 @@ const NavBar = () => {
             </Button>
 
             <Button
+              id="drawer-stats"
               variant={pathname === "/stats" ? "contained" : "outlined"}
               sx={{
                  ...drawerButtonStyles,
@@ -177,6 +181,7 @@ const NavBar = () => {
             </Button>
 
             <Button
+              id="drawer-assistance-types"
               variant={pathname === "/assistance-types" ? "contained" : "outlined"}
               sx={{
                  ...drawerButtonStyles,
@@ -192,6 +197,7 @@ const NavBar = () => {
 
             {isSuperAdmin() && (
               <Button
+                id="drawer-manage-admins"
                 variant={pathname === "/admin/manage-admins" ? "contained" : "outlined"}
                 sx={{
                    ...drawerButtonStyles,
@@ -206,7 +212,7 @@ const NavBar = () => {
               </Button>
             )}
 
-            <div className="w-full flex justify-center border-t border-gray-200 pt-3 mt-2">
+            <div id="drawer-export" className="w-full flex justify-center border-t border-gray-200 pt-3 mt-2">
               <ExportButton
                 text="ดาวน์โหลดข้อมูล"
                 startDate={startDate}
@@ -217,6 +223,7 @@ const NavBar = () => {
             </div>
 
             <Button
+              id="drawer-logout"
               variant="contained"
               sx={{
                 ...drawerButtonStyles,

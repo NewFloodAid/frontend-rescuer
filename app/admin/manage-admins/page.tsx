@@ -312,6 +312,8 @@ export default function ManageAdmins() {
                     }
                     className="w-full p-2 border rounded-lg"
                     required
+                    autoComplete="off"
+                    data-lpignore="true"
                   />
                 </div>
               )}
@@ -328,6 +330,8 @@ export default function ManageAdmins() {
                   }
                   className="w-full p-2 border rounded-lg"
                   required
+                  autoComplete="off"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -340,6 +344,8 @@ export default function ManageAdmins() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   className="w-full p-2 border rounded-lg"
+                  autoComplete="off"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -354,6 +360,8 @@ export default function ManageAdmins() {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   className="w-full p-2 border rounded-lg"
+                  autoComplete="off"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -370,30 +378,16 @@ export default function ManageAdmins() {
                     }
                     className="w-full p-2 border rounded-lg"
                     required
+                    autoComplete="new-password"
+                    data-lpignore="true"
                   />
                 </div>
               )}
 
+              {/* Province selector – scope for filtering districts */}
               <div>
                 <label className="block text-sm font-bold mb-1">
-                  บทบาท *
-                </label>
-                <select
-                  value={formData.role}
-                  onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value, districtIds: [] })
-                  }
-                  className="w-full p-2 border rounded-lg"
-                >
-                  <option value="DISTRICT_ADMIN">ผู้ดูแลเขต</option>
-                  <option value="SUPER_ADMIN">ผู้ดูแลระบบ</option>
-                </select>
-              </div>
-
-              {/* Province selector – shown for SUPER_ADMIN (required) and as scope for DISTRICT_ADMIN */}
-              <div>
-                <label className="block text-sm font-bold mb-1">
-                  จังหวัด{formData.role === "SUPER_ADMIN" ? " *" : " (ใช้กรองรายชื่อเขต)"}
+                  จังหวัด (ใช้กรองรายชื่อเขต)
                 </label>
                 {provincesQuery.isPending ? (
                   <div className="flex items-center gap-2 p-2 border rounded-lg text-gray-400 text-sm">
