@@ -97,6 +97,7 @@ export async function logout() {
 }
 
 export function isAuthenticated(): boolean {
+  if (typeof window === "undefined") return false;
   const token = localStorage.getItem("jwtToken");
 
   try {
@@ -116,14 +117,17 @@ export function isAuthenticated(): boolean {
 }
 
 export function getAdminRole(): string | null {
+  if (typeof window === "undefined") return null;
   return localStorage.getItem("adminRole");
 }
 
 export function getAdminFullName(): string | null {
+  if (typeof window === "undefined") return null;
   return localStorage.getItem("adminFullName");
 }
 
 export function getAdminDistrictIds(): number[] {
+  if (typeof window === "undefined") return [];
   try {
     const ids = localStorage.getItem("adminDistrictIds");
     return ids ? JSON.parse(ids) : [];
@@ -141,6 +145,7 @@ export function isDistrictAdmin(): boolean {
 }
 
 function clearAuthData() {
+  if (typeof window === "undefined") return;
   localStorage.removeItem("jwtToken");
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("adminRole");
